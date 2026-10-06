@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kinoko 9:16 Vertical Content Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;700;900&family=Noto+Serif+JP:wght@400;600;900&family=Playfair+Display:ital,wght@0,600;0,800;1,500&family=Shippori+Mincho:wght@500;800&display=swap" rel="stylesheet">
+<style>
+  html, body { background:#0b0b0f; }
+  body { font-family: Inter, "Noto Sans JP", system-ui, sans-serif; }
+  .scrollbar-thin::-webkit-scrollbar { width:6px; height:6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background:#3f3f46; border-radius:6px; }
+  #stage { touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; overscroll-behavior:contain; }
+  #card { touch-action:none; cursor:grab; display:block; width:100%; height:100%; }
+  #card.dragging { cursor:grabbing; }
+  .card-box { aspect-ratio:9/16; width:min(100%, calc((100vh - 230px) * 9 / 16)); min-width:240px; }
+  @media (max-width:1023px){ .card-box { width:min(100%, 420px); } }
+  .field { width:100%; background:#18181b; border:1px solid #27272a; border-radius:.6rem; padding:.55rem .75rem; color:#f4f4f5; font-size:.875rem; outline:none; }
+  .field:focus { border-color:#f59e0b; box-shadow:0 0 0 3px rgba(245,158,11,.15); }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; border-radius:.6rem; padding:.55rem .9rem; font-size:.85rem; font-weight:600; transition:all .15s; white-space:nowrap; }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .btn-primary { background:#f59e0b; color:#111; } .btn-primary:hover:not(:disabled){ background:#fbbf24; }
+  .btn-ghost { background:#18181b; color:#e4e4e7; border:1px solid #27272a; } .btn-ghost:hover:not(:disabled){ border-color:#52525b; background:#1f1f23; }
+  .btn-ai { background:linear-gradient(135deg,#7c3aed,#db2777); color:#fff; } .btn-ai:hover:not(:disabled){ filter:brightness(1.12); }
+  .label { font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#a1a1aa; margin-bottom:.35rem; display:block; }
+  .tab-btn[aria-selected="true"] { background:#27272a; color:#fbbf24; }
+  .tpl-btn[aria-pressed="true"] { border-color:#f59e0b; background:rgba(245,158,11,.12); color:#fbbf24; }
+  .item-row[aria-current="true"] { border-color:#f59e0b; background:rgba(245,158,11,.08); }
+  .modal { position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.72); backdrop-filter:blur(4px); }
+  .modal.open { display:flex; }
+  .spin { animation:spin 1s linear infinite; } @keyframes spin { to { transform:rotate(360deg); } }
+  input[type=range] { accent-color:#f59e0b; }
+</style>
+</head>
+<body class="text-zinc-100 min-h-screen overflow-x-hidden">
+
+<!-- ============ HEADER ============ -->
+<header class="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur">
+  <div class="max-w-[1600px] mx-auto px-4 py-3 flex items-center gap-3 flex-wrap">
+    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-rose-500 grid place-items-center text-zinc-950 shadow-lg shadow-amber-500/20"><i class="fa-solid fa-mobile-screen"></i></div>
+    <div class="min-w-0 flex-1">
+      <h1 class="font-extrabold tracking-tight text-base sm:text-lg leading-tight truncate"><span id="topicTitle">Kinoko</span> <span class="text-amber-400">9:16</span> Vertical Content Studio</h1>
+      <p class="text-[11px] text-zinc-500 hidden sm:block">1080 × 1920 · Live canvas · Gemini AI translation, imagery, audio & captions</p>
+    </div>
+    <button class="btn btn-ghost" data-open="settingsModal" title="Settings & API key"><i class="fa-solid fa-gear"></i><span class="hidden sm:inline">Settings</span><span id="keyDot" class="w-2 h-2 rounded-full bg-rose-500"></span></button>
+    <button class="btn btn-ghost" id="batchBtn"><i class="fa-solid fa-layer-group"></i><span class="hidden sm:inline">Batch Export</span></button>
+    <button class="btn btn-primary" id="exportBtn"><i class="fa-solid fa-download"></i>Export PNG</button>
+  </div>
+</header>
+
+<main class="max-w-[1600px] mx-auto p-4 grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)_380px]">
+
+  <!-- ============ LEFT: DATASET ============ -->
+  <section class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-3 flex flex-col gap-3 lg:max-h-[calc(100vh-100px)] lg:sticky lg:top-[84px]">
+    <div class="flex items-center justify-between">
+      <h2 class="font-bold text-sm"><i class="fa-solid fa-database text-amber-400 mr-1"></i> Dataset <span id="itemCount" class="text-zinc-500 font-medium"></span></h2>
+      <button class="text-xs text-zinc-500 hover:text-rose-400" id="resetDataBtn" title="Restore default dataset"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+    </div>
+    <input id="searchInput" class="field" placeholder="Search items…" autocomplete="off">
+    <ul id="itemList" class="flex-1 overflow-y-auto scrollbar-thin space-y-1.5 max-h-72 lg:max-h-none pr-1"></ul>
+    <div class="grid grid-cols-2 gap-2">
+      <button class="btn btn-ai text-xs" data-open="addModal"><i class="fa-solid fa-wand-magic-sparkles"></i>AI Add Item</button>
+      <button class="btn btn-ghost text-xs" data-open="importModal"><i class="fa-solid fa-file-import"></i>Import Source</button>
+    </div>
+  </section>
+
+  <!-- ============ CENTER: STAGE ============ -->
+  <section class="flex flex-col items-center gap-3 min-w-0">
+    <div class="grid grid-cols-4 gap-2 w-full max-w-xl" id="tplBar"></div>
+
+    <div id="stage" class="card-box relative rounded-2xl overflow-hidden ring-1 ring-zinc-700 shadow-2xl shadow-black/60 bg-zinc-900">
+      <canvas id="card" width="1080" height="1920" aria-label="9:16 card preview"></canvas>
+      <div id="stageHint" class="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] px-2 py-1 rounded-full bg-black/60 text-zinc-300 whitespace-nowrap transition-opacity">
+        <i class="fa-solid fa-hand-pointer"></i> Drag to move · wheel / pinch to zoom
+      </div>
+    </div>
+
+    <div class="w-full max-w-xl bg-zinc-900/60 border border-zinc-800 rounded-2xl p-3 space-y-3">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-magnifying-glass-minus text-zinc-500"></i>
+        <input type="range" id="scaleSlider" min="20" max="800" value="100" class="flex-1">
+        <i class="fa-solid fa-magnifying-glass-plus text-zinc-500"></i>
+        <span id="scaleLabel" class="text-xs tabular-nums w-12 text-right text-zinc-400">100%</span>
+      </div>
+      <div class="flex flex-wrap gap-2 items-center">
+        <button class="btn btn-ghost text-xs" id="resetViewBtn"><i class="fa-solid fa-crosshairs"></i>Reset</button>
+        <label class="btn btn-ghost text-xs cursor-pointer"><i class="fa-solid fa-upload"></i>Upload<input type="file" id="fileInput" accept="image/*" class="hidden"></label>
+        <button class="btn btn-ghost text-xs" id="clearImgBtn" title="Remove custom image and use default"><i class="fa-solid fa-image"></i>Default</button>
+        <select id="filterSelect" class="field !w-auto !py-1.5 text-xs">
+          <option value="normal">Filter: Normal</option>
+          <option value="vibrant">Filter: Vibrant</option>
+          <option value="contrast">Filter: Contrast</option>
+          <option value="vintage">Filter: Vintage</option>
+          <option value="grayscale">Filter: Grayscale</option>
+        </select>
+        <span id="imgStatus" class="text-[11px] text-zinc-500 ml-auto"></span>
+      </div>
+      <div class="flex gap-2">
+        <input id="imgUrlInput" class="field text-xs" placeholder="Or paste an image URL (CORS-enabled) and press Enter">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RIGHT: EDITOR / AI ============ -->
+  <section class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-3 flex flex-col gap-3 min-w-0">
+    <div class="grid grid-cols-2 gap-1 bg-zinc-950 p-1 rounded-xl" role="tablist">
+      <button class="tab-btn btn !py-2 text-zinc-400" role="tab" data-tab="textTab" aria-selected="true"><i class="fa-solid fa-pen-nib"></i>Text & Language</button>
+      <button class="tab-btn btn !py-2 text-zinc-400" role="tab" data-tab="aiTab" aria-selected="false"><i class="fa-solid fa-robot"></i>AI Studio</button>
+    </div>
+
+    <!-- TEXT TAB -->
+    <div id="textTab" class="tab-panel space-y-3">
+      <div>
+        <label class="label" for="fTitle">Title</label>
+        <input id="fTitle" class="field" data-key="title">
+      </div>
+      <div>
+        <label class="label" for="fPhonetic">Phonetic / Reading</label>
+        <input id="fPhonetic" class="field" data-key="phonetic">
+      </div>
+      <div>
+        <label class="label" for="fMeaning">Short Meaning</label>
+        <textarea id="fMeaning" rows="2" class="field resize-y" data-key="meaning"></textarea>
+      </div>
+      <div>
+        <label class="label" for="fOrigin">Detailed Background</label>
+        <textarea id="fOrigin" rows="6" class="field resize-y" data-key="origin"></textarea>
+      </div>
+      <div class="grid grid-cols-[1fr_auto] gap-2">
+        <div>
+          <label class="label" for="fCategory">Category Tag</label>
+          <input id="fCategory" class="field" data-key="categoryTag">
+        </div>
+        <div>
+          <label class="label" for="fColor">Theme</label>
+          <input id="fColor" type="color" class="h-[38px] w-14 rounded-lg bg-zinc-900 border border-zinc-800 cursor-pointer">
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-violet-500/30 bg-violet-500/5 p-3 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="label !mb-0 !text-violet-300"><i class="fa-solid fa-language"></i> Gemini Translator</span>
+          <span class="text-[10px] text-zinc-500">Title keeps original first</span>
+        </div>
+        <div class="flex gap-2">
+          <select id="langSelect" class="field"></select>
+          <button class="btn btn-ai" id="translateBtn"><i class="fa-solid fa-globe"></i>Translate</button>
+        </div>
+        <button class="text-xs text-zinc-400 hover:text-amber-400" id="revertTextBtn"><i class="fa-solid fa-arrow-rotate-left"></i> Revert to original text</button>
+      </div>
+    </div>
+
+    <!-- AI TAB -->
+    <div id="aiTab" class="tab-panel space-y-3 hidden">
+      <div class="rounded-xl border border-zinc-800 p-3 space-y-2">
+        <span class="label"><i class="fa-solid fa-image text-pink-400"></i> AI Background Image (9:16)</span>
+        <select id="imgStyle" class="field text-sm">
+          <option value="natural-light documentary photography, shallow depth of field, rich textures">Documentary · natural light</option>
+          <option value="moody dark studio still life, dramatic rim lighting, deep shadows">Moody studio still life</option>
+          <option value="traditional Japanese still life on washi paper and aged wood, soft diffused daylight">Japanese washi still life</option>
+          <option value="cinematic cyber-noir, neon rim light, gold accents, bokeh, high contrast">Cyber neon luxe</option>
+          <option value="bright, vibrant, high-saturation social media food/lifestyle photography">Bright social media</option>
+        </select>
+        <input id="imgExtra" class="field text-sm" placeholder="Extra direction (optional) e.g. 'in a misty pine forest'">
+        <button class="btn btn-ai w-full" id="genImgBtn"><i class="fa-solid fa-wand-magic-sparkles"></i>Generate Background</button>
+      </div>
+
+      <div class="rounded-xl border border-zinc-800 p-3 space-y-2">
+        <span class="label"><i class="fa-solid fa-volume-high text-sky-400"></i> AI Spoken Audio Guide</span>
+        <div class="flex gap-2">
+          <select id="voiceSelect" class="field text-sm">
+            <option>Kore</option><option>Puck</option><option>Charon</option><option>Aoede</option><option>Fenrir</option><option>Leda</option><option>Orus</option><option>Zephyr</option>
+          </select>
+          <button class="btn btn-ai" id="ttsBtn"><i class="fa-solid fa-play"></i>Narrate</button>
+        </div>
+        <audio id="audioEl" controls class="w-full hidden h-10"></audio>
+        <div class="flex items-center justify-between">
+          <button class="text-xs text-zinc-400 hover:text-sky-400" id="browserTtsBtn"><i class="fa-solid fa-comment-dots"></i> Use browser voice instead</button>
+          <a id="audioDl" class="text-xs text-zinc-400 hover:text-sky-400 hidden" download="audio-guide.wav"><i class="fa-solid fa-download"></i> WAV</a>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-zinc-800 p-3 space-y-2">
+        <span class="label"><i class="fa-solid fa-hashtag text-amber-400"></i> Social Caption Generator</span>
+        <div class="flex gap-2">
+          <select id="platformSelect" class="field text-sm">
+            <option>TikTok</option><option>Instagram Reels</option><option>YouTube Shorts</option><option>All three platforms</option>
+          </select>
+          <button class="btn btn-ai" id="captionBtn"><i class="fa-solid fa-pen-fancy"></i>Write</button>
+        </div>
+        <textarea id="captionOut" rows="8" class="field text-sm resize-y" placeholder="Your caption with hashtags & emojis appears here…"></textarea>
+        <button class="btn btn-ghost w-full text-xs" id="copyCaptionBtn"><i class="fa-regular fa-copy"></i>Copy Caption</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ MODALS ============ -->
+<div id="settingsModal" class="modal" role="dialog" aria-modal="true">
+  <div class="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-4">
+    <div class="flex items-center justify-between"><h3 class="font-bold"><i class="fa-solid fa-gear text-amber-400"></i> Studio Settings</h3><button data-close class="text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+    <div>
+      <label class="label" for="topicInput">Topic name</label>
+      <input id="topicInput" class="field" placeholder="e.g. Kinoko, Sushi Terms, Tea">
+    </div>
+    <div>
+      <label class="label" for="apiKeyInput">Gemini API key</label>
+      <input id="apiKeyInput" type="password" class="field" placeholder="AIza…" autocomplete="off">
+      <p class="text-[11px] text-zinc-500 mt-1">Stored only in this browser (localStorage). Requests go directly to generativelanguage.googleapis.com.</p>
+    </div>
+    <details class="text-sm">
+      <summary class="cursor-pointer text-zinc-400">Model IDs</summary>
+      <div class="space-y-2 mt-2">
+        <label class="label" for="mText">Text / JSON / translation</label><input id="mText" class="field text-xs">
+        <label class="label" for="mImage">Image generation</label><input id="mImage" class="field text-xs">
+        <label class="label" for="mTts">Text-to-speech</label><input id="mTts" class="field text-xs">
+      </div>
+    </details>
+    <button class="btn btn-primary w-full" id="saveSettingsBtn"><i class="fa-solid fa-check"></i>Save</button>
+  </div>
+</div>
+
+<div id="exportModal" class="modal" role="dialog" aria-modal="true">
+  <div class="w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3 max-h-full overflow-y-auto scrollbar-thin">
+    <div class="flex items-center justify-between"><h3 class="font-bold"><i class="fa-solid fa-image text-amber-400"></i> Your 9:16 Card</h3><button data-close class="text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+    <img id="exportImg" alt="Exported card" class="w-full rounded-xl ring-1 ring-zinc-700" style="-webkit-touch-callout:default">
+    <p class="text-xs text-zinc-400"><i class="fa-solid fa-circle-info"></i> If the download didn't start (mobile or embedded iframe), <b>long-press</b> or <b>right-click</b> the image and choose “Save Image”.</p>
+    <a id="exportDl" class="btn btn-primary w-full" download><i class="fa-solid fa-download"></i>Download PNG</a>
+  </div>
+</div>
+
+<div id="batchModal" class="modal" role="dialog" aria-modal="true">
+  <div class="w-full max-w-6xl bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex flex-col gap-3 max-h-full">
+    <div class="flex items-center justify-between gap-3 flex-wrap">
+      <h3 class="font-bold"><i class="fa-solid fa-layer-group text-amber-400"></i> Batch Export <span id="batchCount" class="text-zinc-500 font-medium text-sm"></span></h3>
+      <div class="flex gap-2 items-center">
+        <button class="btn btn-primary text-xs" id="dlAllBtn" disabled><i class="fa-solid fa-file-arrow-down"></i>Download All</button>
+        <button data-close class="text-zinc-500 hover:text-white px-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+    </div>
+    <div class="h-1.5 bg-zinc-800 rounded-full overflow-hidden"><div id="batchBar" class="h-full bg-amber-400 transition-all" style="width:0"></div></div>
+    <p class="text-xs text-zinc-500">Long-press / right-click any card to save it individually.</p>
+    <div id="batchGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 overflow-y-auto scrollbar-thin pr-1"></div>
+  </div>
+</div>
+
+<div id="addModal" class="modal" role="dialog" aria-modal="true">
+  <div class="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-3">
+    <div class="flex items-center justify-between"><h3 class="font-bold"><i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i> AI Custom Item Creator</h3><button data-close class="text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+    <p class="text-xs text-zinc-400">Name or describe an item. Gemini returns structured JSON (title, reading, meaning, background, category, color) and adds it to your dataset.</p>
+    <textarea id="addPrompt" rows="3" class="field" placeholder="e.g. Hon-shimeji, or 'the black truffle used in Japanese fusion cuisine'"></textarea>
+    <label class="flex items-center gap-2 text-xs text-zinc-400"><input type="checkbox" id="addGenImg" class="accent-amber-500"> Also generate an AI background image</label>
+    <button class="btn btn-ai w-full" id="addItemBtn"><i class="fa-solid fa-plus"></i>Create Item</button>
+  </div>
+</div>
+
+<div id="importModal" class="modal" role="dialog" aria-modal="true">
+  <div class="w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-3">
+    <div class="flex items-center justify-between"><h3 class="font-bold"><i class="fa-solid fa-file-import text-amber-400"></i> Import Source → Dataset</h3><button data-close class="text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+    <p class="text-xs text-zinc-400">Paste a website URL or document/article text. Gemini extracts every key item into the structured dataset (id, original title, phonetic, meaning, origin, category, theme color).</p>
+    <textarea id="importText" rows="8" class="field text-sm" placeholder="https://example.com/mushrooms   — or —   paste article text here"></textarea>
+    <div class="flex gap-4 text-xs text-zinc-400">
+      <label class="flex items-center gap-1.5"><input type="radio" name="importMode" value="replace" checked class="accent-amber-500"> Replace dataset</label>
+      <label class="flex items-center gap-1.5"><input type="radio" name="importMode" value="append" class="accent-amber-500"> Append</label>
+    </div>
+    <button class="btn btn-ai w-full" id="importBtn"><i class="fa-solid fa-bolt"></i>Extract with Gemini</button>
+  </div>
+</div>
+
+<div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] hidden max-w-[92vw] px-4 py-2.5 rounded-xl text-sm shadow-2xl border"></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   CONSTANTS & DEFAULT DATASET
+   ===================================================================== */
+const W = 1080, H = 1920;
+const LS_STATE = 'vcs916.state.v1', LS_SETTINGS = 'vcs916.settings.v1';
+const wm = f => `https://commons.wikimedia.org/wiki/Special:FilePath/${f}?width=1080`;
+
+const DEFAULT_TOPIC = 'Kinoko';
+const DEFAULT_DATA = [
+  { id:'matsutake', originalTitle:'松茸', phonetic:'Matsutake · Tricholoma matsutake', meaning:'Edible ★ Prized — spicy, pine-resin aroma; the king of autumn mushrooms.', origin:'Name means “pine mushroom”: it grows only in symbiosis with the roots of Japanese red pine (akamatsu) and has never been successfully cultivated. Gifting matsutake has been an aristocratic autumn custom since the Heian period, and a single top-grade domestic box can sell for hundreds of thousands of yen. Classic dishes: dobin-mushi teapot soup and matsutake gohan.', categoryTag:'Prized Edible', themeColor:'#8B5A2B', image:wm('Tricholoma_matsutake.jpg') },
+  { id:'shiitake', originalTitle:'椎茸', phonetic:'Shiitake · Lentinula edodes', meaning:'Edible — deep umami, smoky and meaty, intensified by sun-drying.', origin:'Named after the shii tree (Castanopsis) on whose fallen logs it grows. Log cultivation began in Edo-era Kyushu, and Ōita Prefecture still leads dried-shiitake production. Drying converts compounds into guanylate, the umami backbone of shōjin-ryōri dashi used in Buddhist temple cooking.', categoryTag:'Cultivated Edible', themeColor:'#6B3E26', image:wm('Shiitakegrowing.jpg') },
+  { id:'maitake', originalTitle:'舞茸', phonetic:'Maitake · Grifola frondosa', meaning:'Edible — earthy, peppery; frilly clusters that crisp beautifully in tempura.', origin:'“Dancing mushroom”: legend says foragers danced for joy on finding one, since a large cluster was once worth its weight in silver. Wild maitake grows at the base of old oaks in the mountains of Tohoku. Commercial cultivation was perfected in Niigata in the 1980s, making it an everyday ingredient.', categoryTag:'Forest Edible', themeColor:'#A0683A', image:wm('Grifola_frondosa.jpg') },
+  { id:'enokitake', originalTitle:'えのき茸', phonetic:'Enokitake · Flammulina filiformis', meaning:'Edible — mild and crunchy, slippery when cooked; a hot-pot essential.', origin:'Named for the enoki (Chinese hackberry) tree. Wild enoki are brown with sticky caps and fruit in winter, earning the nickname “winter mushroom”. The familiar pale, noodle-like bunches are grown in darkness in bottles, mostly in Nagano Prefecture, which produces over half of Japan’s supply.', categoryTag:'Cultivated Edible', themeColor:'#C9AE5E', image:wm('Enokitake.jpg') },
+  { id:'shimeji', originalTitle:'しめじ', phonetic:'Shimeji · Hypsizygus marmoreus', meaning:'Edible — nutty, firm and slightly bitter raw, sweet and savoury when cooked.', origin:'A proverb says “Nioi matsutake, aji shimeji” — matsutake for aroma, shimeji for flavour. That saying refers to the wild hon-shimeji; most supermarket “shimeji” is buna-shimeji, a beech-wood species grown on sawdust since the 1970s. Always cook it: raw shimeji is bitter and hard to digest.', categoryTag:'Cultivated Edible', themeColor:'#8C7A5B', image:wm('Hypsizygus_marmoreus.jpg') },
+  { id:'nameko', originalTitle:'なめこ', phonetic:'Nameko · Pholiota microspora', meaning:'Edible — glossy amber caps coated in natural gel; silky in miso soup.', origin:'The name comes from “nameraka” (smooth/slippery) for its jelly-like coating, which thickens soups naturally. Nameko grows on beech and oak stumps in snowy northern regions and is a staple of Yamagata and Fukushima home cooking — nameko-jiru miso soup is a classic Japanese breakfast.', categoryTag:'Forest Edible', themeColor:'#D2691E', image:wm('Pholiota_nameko.jpg') },
+  { id:'eringi', originalTitle:'エリンギ', phonetic:'Eringi · Pleurotus eryngii', meaning:'Edible — thick, meaty stem with a scallop-like bite; holds its shape when grilled.', origin:'Native to the Mediterranean, where it grows on the roots of Eryngium plants — hence the name, written in katakana as a foreign word. Japanese growers began bottle cultivation in the 1990s, and it quickly became a favourite for butter-soy sautés and vegetarian “scallops”.', categoryTag:'Introduced Edible', themeColor:'#C2A27A', image:wm('Pleurotus_eryngii.jpg') },
+  { id:'kikurage', originalTitle:'木耳', phonetic:'Kikurage · Auricularia auricula-judae', meaning:'Edible — no taste of its own, prized for a crunchy, jelly-like texture.', origin:'Written “tree ear” but read kikurage, “tree jellyfish”, because its crunchy bite reminded people of dried jellyfish. This ear-shaped fungus grows on dead elder and mulberry wood. It is essential in ramen toppings, Chinese stir-fries and Okinawan dishes, sold mostly dried and rehydrated before use.', categoryTag:'Texture Edible', themeColor:'#4A2E28', image:wm('Auricularia_auricula-judae.jpg') },
+  { id:'yamabushitake', originalTitle:'山伏茸', phonetic:'Yamabushitake · Hericium erinaceus', meaning:'Edible — tender, crab-like texture; studied for its nerve-growth compounds.', origin:'Its cascading white spines resemble the pompom ornaments worn by yamabushi, the mountain ascetic monks of Shugendō, giving the name. Known in English as lion’s mane, it grows on wounded broadleaf trees. It is now widely cultivated and popular in Japan as a health food and dietary supplement.', categoryTag:'Rare Edible', themeColor:'#B8A887', image:wm('Hericium_erinaceus.jpg') },
+  { id:'benitengutake', originalTitle:'紅天狗茸', phonetic:'Benitengutake · Amanita muscaria', meaning:'☠ Toxic — do NOT eat. Causes delirium, vomiting and convulsions.', origin:'“Crimson tengu mushroom”: its red cap is likened to the face of the long-nosed tengu goblin. The iconic fly agaric of fairy tales grows under birch and pine in highland Hokkaido and Nagano. Its ibotenic acid and muscimol are psychoactive and poisonous; a reminder never to eat wild mushrooms without expert identification.', categoryTag:'Poisonous', themeColor:'#C62828', image:wm('Amanita_muscaria.jpg') }
+];
+
+const PALETTE = ['#8B5A2B','#C62828','#2E7D32','#1565C0','#6A1B9A','#EF6C00','#00838F','#AD1457','#4E342E','#827717'];
+const FILTERS = {
+  normal:'none',
+  vibrant:'saturate(1.65) contrast(1.08) brightness(1.03)',
+  contrast:'contrast(1.5) brightness(0.96) saturate(1.1)',
+  vintage:'sepia(0.6) contrast(1.08) brightness(0.96) saturate(0.8) hue-rotate(-8deg)',
+  grayscale:'grayscale(1) contrast(1.15)'
+};
+const TEMPLATES = [
+  { id:1, name:'Editorial', icon:'fa-newspaper' },
+  { id:2, name:'TikTok', icon:'fa-bolt' },
+  { id:3, name:'Washi', icon:'fa-scroll' },
+  { id:4, name:'Dark Luxe', icon:'fa-gem' }
+];
+const LANGS = ['English','Japanese','Chinese (Simplified)','Chinese (Traditional)','Korean','Spanish','French','German','Italian','Portuguese','Thai','Vietnamese','Indonesian','Hindi','Arabic','Russian'];
+
+const F_SERIF = '"Playfair Display", "Noto Serif JP", Georgia, serif';
+const F_BODY_SERIF = '"Noto Serif JP", Georgia, serif';
+const F_SANS = 'Inter, "Noto Sans JP", system-ui, sans-serif';
+const F_HEAVY = '"Noto Sans JP", Inter, system-ui, sans-serif';
+const F_MINCHO = '"Shippori Mincho", "Noto Serif JP", serif';
+const F_DECO = 'Cinzel, "Noto Serif JP", serif';
+const FONT_SPECS = ['800 40px "Playfair Display"','italic 500 40px "Playfair Display"','400 40px "Noto Serif JP"','900 40px "Noto Serif JP"',
+  '400 40px "Noto Sans JP"','700 40px "Noto Sans JP"','900 40px "Noto Sans JP"','500 40px "Shippori Mincho"','800 40px "Shippori Mincho"',
+  '700 40px Cinzel','900 40px Cinzel','400 40px Inter','600 40px Inter','800 40px Inter'];
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+const S = {
+  topic: DEFAULT_TOPIC, template: 1, items: [], cur: 0,
+  settings: { apiKey:'', textModel:'gemini-3-flash-preview', imageModel:'gemini-3.1-flash-image', ttsModel:'gemini-2.5-flash-preview-tts', voice:'Kore' }
+};
+
+function lsGet(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } }
+
+function validHex(c){ return /^#[0-9a-f]{6}$/i.test(c||'') ? c : null; }
+function uid(){ return 'item-' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function makeItem(o, i=0){
+  const it = {
+    id: o.id || uid(),
+    originalTitle: o.originalTitle || 'Untitled',
+    phonetic: o.phonetic || '', meaning: o.meaning || '', origin: o.origin || '',
+    categoryTag: o.categoryTag || 'Item',
+    themeColor: validHex(o.themeColor) || PALETTE[i % PALETTE.length],
+    image: o.image || '', customImage: o.customImage || '', lang: o.lang || 'original'
+  };
+  // d = live display text (editable / translated); top-level fields keep the source data
+  it.d = Object.assign({ title: it.originalTitle, phonetic: it.phonetic, meaning: it.meaning, origin: it.origin }, o.d || {});
+  it.view = Object.assign({ scale:1, ox:0, oy:0, filter:'normal' }, o.view || {});
+  return it;
+}
+
+let quotaWarned = false;
+const saveState = debounce(() => {
+  const snap = { topic:S.topic, template:S.template, cur:S.cur, items:S.items };
+  if (!lsSet(LS_STATE, snap)) {
+    // Too large (AI / uploaded images as data URLs) — save without them
+    lsSet(LS_STATE, { ...snap, items: S.items.map(it => ({ ...it, customImage: it.customImage.startsWith('data:') ? '' : it.customImage })) });
+    if (!quotaWarned) { quotaWarned = true; toast('Storage full: custom images are kept for this session only.', 'warn'); }
+  }
+}, 400);
+
+function debounce(fn, ms){ let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+const curItem = () => S.items[S.cur];
+
+/* =====================================================================
+   DRAWING UTILITIES
+   ===================================================================== */
+function hexToRgb(h){ const n = parseInt((validHex(h)||'#888888').slice(1),16); return [n>>16&255, n>>8&255, n&255]; }
+function rgba(h,a){ const [r,g,b] = hexToRgb(h); return `rgba(${r},${g},${b},${a})`; }
+function shade(h, amt){ // amt -1..1 (neg = darker, pos = lighter)
+  const [r,g,b] = hexToRgb(h), t = amt < 0 ? 0 : 255, p = Math.abs(amt);
+  const f = c => Math.round((t - c) * p + c).toString(16).padStart(2,'0');
+  return '#' + f(r) + f(g) + f(b);
+}
+function neon(h){ // bright, saturated variant of a theme color for glow effects
+  let [r,g,b] = hexToRgb(h); const mx = Math.max(r,g,b,1);
+  [r,g,b] = [r,g,b].map(c => Math.min(255, Math.round(c / mx * 255)));
+  return shade('#' + [r,g,b].map(c=>c.toString(16).padStart(2,'0')).join(''), 0.25);
+}
+function seeded(str){ let h = 1779033703 ^ str.length; for (let i=0;i<str.length;i++){ h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = h << 13 | h >>> 19; }
+  return () => { h = Math.imul(h ^ h >>> 16, 2246822507); h = Math.imul(h ^ h >>> 13, 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; }; }
+const pad2 = n => String(n).padStart(2,'0');
+
+function font(ctx, weight, size, family, style=''){ ctx.font = `${style} ${weight} ${size}px ${family}`.trim(); }
+function ls(ctx, v){ if ('letterSpacing' in ctx) ctx.letterSpacing = v; }
+
+const CJK = '　-ヿ㐀-鿿豈-﫿＀-￯가-힯';
+const TOKEN_RE = new RegExp(`[${CJK}]|[^\\s${CJK}]+|\\s+`, 'g');
+function wrapLines(ctx, text, maxW, maxLines){
+  const out = [];
+  for (const para of String(text ?? '').split('\n')) {
+    let line = '';
+    for (const tok of (para.match(TOKEN_RE) || [])) {
+      const isSpace = /^\s+$/.test(tok);
+      if (!isSpace && ctx.measureText(tok).width > maxW) { // break very long words char-by-char
+        for (const ch of [...tok]) { if (line && ctx.measureText(line + ch).width > maxW) { out.push(line.trimEnd()); line = ''; } line += ch; }
+        continue;
+      }
+      if (line.trim() && ctx.measureText(line + tok).width > maxW) { out.push(line.trimEnd()); line = isSpace ? '' : tok; }
+      else line += tok;
+    }
+    out.push(line.trimEnd());
+  }
+  if (maxLines && out.length > maxLines) {
+    const r = out.slice(0, maxLines); let last = r[maxLines-1];
+    while (last && ctx.measureText(last + '…').width > maxW) last = [...last].slice(0,-1).join('');
+    r[maxLines-1] = last.trimEnd() + '…'; return r;
+  }
+  return out;
+}
+function fitText(ctx, text, weight, family, maxSize, minSize, maxW, maxLines, style=''){
+  for (let s = maxSize; s >= minSize; s -= 4) {
+    font(ctx, weight, s, family, style);
+    const lines = wrapLines(ctx, text, maxW);
+    if (lines.length <= maxLines) return { size:s, lines };
+  }
+  font(ctx, weight, minSize, family, style);
+  return { size:minSize, lines: wrapLines(ctx, text, maxW, maxLines) };
+}
+function drawLines(ctx, lines, x, y, lh, mode='fill'){ lines.forEach((l,i) => mode==='stroke' ? ctx.strokeText(l, x, y + i*lh) : ctx.fillText(l, x, y + i*lh)); return y + (lines.length - 1) * lh; }
+function rrect(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x,y,w,h,r) : (ctx.moveTo(x+r,y), ctx.arcTo(x+w,y,x+w,y+h,r), ctx.arcTo(x+w,y+h,x,y+h,r), ctx.arcTo(x,y+h,x,y,r), ctx.arcTo(x,y,x+w,y,r), ctx.closePath()); }
+function linesFor(space, lh){ return Math.max(0, Math.floor(space / lh)); }
+
+/* ---------- photo regions per template (used by drag/zoom math too) ---------- */
+function photoRect(t){
+  return ({ 1:{x:70,y:170,w:940,h:930}, 2:{x:0,y:0,w:W,h:H}, 3:{x:150,y:190,w:780,h:960}, 4:{x:150,y:190,w:780,h:900} })[t];
+}
+
+/* ---------- procedural fallback artwork (never a blank canvas) ---------- */
+function drawProcedural(ctx, r, it){
+  const base = it.themeColor, rnd = seeded(it.id + base);
+  const g = ctx.createLinearGradient(r.x, r.y, r.x + r.w, r.y + r.h);
+  g.addColorStop(0, shade(base, -0.6)); g.addColorStop(0.55, shade(base, -0.15)); g.addColorStop(1, shade(base, 0.25));
+  ctx.fillStyle = g; ctx.fillRect(r.x, r.y, r.w, r.h);
+  for (let i = 0; i < 9; i++) { // soft light blobs
+    const x = r.x + rnd()*r.w, y = r.y + rnd()*r.h, rad = 150 + rnd()*420;
+    const rg = ctx.createRadialGradient(x, y, 0, x, y, rad);
+    rg.addColorStop(0, rgba(shade(base, rnd()*0.8 - 0.2), 0.45)); rg.addColorStop(1, rgba(base, 0));
+    ctx.fillStyle = rg; ctx.fillRect(r.x, r.y, r.w, r.h);
+  }
+  const cx = r.x + r.w*0.68, cy = r.y + r.h*0.3; // concentric rings
+  ctx.lineWidth = 2;
+  for (let rad = 60; rad < Math.max(r.w, r.h) * 1.2; rad += 46) { ctx.strokeStyle = `rgba(255,255,255,${0.09 - rad/30000})`; ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI*2); ctx.stroke(); }
+  ctx.fillStyle = 'rgba(255,255,255,0.10)'; // dot grid
+  for (let x = r.x + 30; x < r.x + r.w; x += 60) for (let y = r.y + 30; y < r.y + r.h; y += 60) { ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI*2); ctx.fill(); }
+  // giant glyph of the original title
+  const glyph = [...it.originalTitle].slice(0, /[　-鿿]/.test(it.originalTitle) ? 1 : 2).join('');
+  const gs = Math.min(r.w, r.h) * 0.72;
+  ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  font(ctx, 900, gs, F_BODY_SERIF); ctx.fillStyle = 'rgba(255,255,255,0.13)';
+  ctx.fillText(glyph, r.x + r.w/2, r.y + r.h*0.46); ctx.restore();
+  // organic flowing lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 3;
+  for (let i = 0; i < 5; i++) {
+    const y0 = r.y + r.h * (0.15 + i*0.17); ctx.beginPath(); ctx.moveTo(r.x - 20, y0);
+    ctx.bezierCurveTo(r.x + r.w*0.3, y0 - 120*rnd(), r.x + r.w*0.7, y0 + 160*rnd(), r.x + r.w + 20, y0 - 40); ctx.stroke();
+  }
+}
+
+function drawPhoto(ctx, img, r, it, clipFn){
+  ctx.save();
+  ctx.beginPath(); clipFn ? clipFn(ctx) : ctx.rect(r.x, r.y, r.w, r.h); ctx.clip();
+  const v = it.view;
+  ctx.fillStyle = shade(it.themeColor, -0.75); ctx.fillRect(r.x, r.y, r.w, r.h);
+  if ('filter' in ctx) ctx.filter = FILTERS[v.filter] || 'none';
+  const cx = r.x + r.w/2 + v.ox, cy = r.y + r.h/2 + v.oy;
+  if (img) {
+    const s = Math.max(r.w / img.naturalWidth, r.h / img.naturalHeight) * v.scale;
+    const w = img.naturalWidth * s, h = img.naturalHeight * s;
+    ctx.drawImage(img, cx - w/2, cy - h/2, w, h);
+  } else {
+    ctx.save(); ctx.translate(cx, cy); ctx.scale(v.scale, v.scale); ctx.translate(-(r.x + r.w/2), -(r.y + r.h/2));
+    drawProcedural(ctx, r, it); ctx.restore();
+  }
+  if ('filter' in ctx) ctx.filter = 'none';
+  if (v.filter === 'vintage') { // vignette + warm wash
+    const vg = ctx.createRadialGradient(r.x+r.w/2, r.y+r.h/2, Math.min(r.w,r.h)*0.3, r.x+r.w/2, r.y+r.h/2, Math.max(r.w,r.h)*0.75);
+    vg.addColorStop(0,'rgba(80,50,20,0)'); vg.addColorStop(1,'rgba(60,35,10,0.55)'); ctx.fillStyle = vg; ctx.fillRect(r.x,r.y,r.w,r.h);
+  }
+  ctx.restore();
+}
+
+/* ---------- cached textures ---------- */
+let parchmentCache = null;
+function parchment(){
+  if (parchmentCache) return parchmentCache;
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'); const rnd = seeded('washi');
+  const rg = g.createRadialGradient(W/2, H/2, 200, W/2, H/2, 1250);
+  rg.addColorStop(0,'#f6eedb'); rg.addColorStop(0.7,'#ead9b6'); rg.addColorStop(1,'#cfb486');
+  g.fillStyle = rg; g.fillRect(0,0,W,H);
+  for (let i=0;i<14;i++){ const x=rnd()*W,y=rnd()*H,r=80+rnd()*260; const s=g.createRadialGradient(x,y,0,x,y,r); s.addColorStop(0,'rgba(170,125,60,0.10)'); s.addColorStop(1,'rgba(170,125,60,0)'); g.fillStyle=s; g.fillRect(0,0,W,H); }
+  for (let i=0;i<900;i++){ // fibers
+    const x=rnd()*W,y=rnd()*H,l=20+rnd()*90,a=rnd()*Math.PI*2;
+    g.strokeStyle = rnd()>0.5 ? 'rgba(255,255,255,0.35)' : 'rgba(130,95,50,0.13)'; g.lineWidth = 0.6 + rnd()*1.2;
+    g.beginPath(); g.moveTo(x,y); g.quadraticCurveTo(x+Math.cos(a+1)*l*0.5, y+Math.sin(a+1)*l*0.5, x+Math.cos(a)*l, y+Math.sin(a)*l); g.stroke();
+  }
+  for (let i=0;i<14000;i++){ g.fillStyle=`rgba(100,70,35,${rnd()*0.12})`; g.fillRect(rnd()*W, rnd()*H, 1+rnd()*1.6, 1+rnd()*1.6); }
+  return (parchmentCache = c);
+}
+function hankoStamp(text, color){
+  const s = 230, c = document.createElement('canvas'); c.width = c.height = s; const g = c.getContext('2d'); const rnd = seeded(text);
+  g.strokeStyle = g.fillStyle = color; g.lineWidth = 12; rrect(g, 14, 14, s-28, s-28, 26); g.stroke();
+  g.lineWidth = 3; rrect(g, 30, 30, s-60, s-60, 16); g.stroke();
+  const chars = [...text].slice(0, 4); g.textAlign = 'center'; g.textBaseline = 'middle';
+  if (chars.length <= 2) { font(g, 800, chars.length === 1 ? 130 : 78, F_MINCHO); chars.forEach((ch,i) => g.fillText(ch, s/2, chars.length === 1 ? s/2+6 : s/2 + (i ? 42 : -38))); }
+  else { font(g, 800, 66, F_MINCHO); chars.forEach((ch,i) => g.fillText(ch, i < 2 ? s*0.66 : s*0.34, s/2 + (i%2 ? 40 : -36))); }
+  g.globalCompositeOperation = 'destination-out'; // ink wear
+  for (let i=0;i<420;i++){ g.beginPath(); g.arc(rnd()*s, rnd()*s, rnd()*3.2, 0, Math.PI*2); g.fill(); }
+  return c;
+}
+
+/* =====================================================================
+   TEMPLATES
+   ===================================================================== */
+function tplEditorial(ctx, it, img, info){
+  const ink = '#1c1814', theme = it.themeColor, P = photoRect(1);
+  ctx.fillStyle = '#f3ede2'; ctx.fillRect(0,0,W,H);
+  // masthead
+  ctx.fillStyle = ink; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+  font(ctx, 800, 46, F_SERIF); ctx.fillText(`${info.topic} Journal`, 70, 118);
+  ctx.textAlign = 'right'; font(ctx, 600, 24, F_SANS); ls(ctx,'4px'); ctx.fillStyle = '#6d5f50';
+  ctx.fillText(`NO. ${pad2(info.index+1)} / ${pad2(info.total)}`, 1010, 112); ls(ctx,'0px');
+  ctx.strokeStyle = ink; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(70,142); ctx.lineTo(1010,142); ctx.stroke();
+  ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(70,150); ctx.lineTo(1010,150); ctx.stroke();
+  // photo
+  drawPhoto(ctx, img, P, it);
+  ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.strokeRect(P.x, P.y, P.w, P.h);
+  // frame
+  ctx.lineWidth = 2; ctx.strokeRect(26, 26, W-52, H-52); ctx.lineWidth = 1; ctx.strokeRect(38, 38, W-76, H-76);
+  // seal / badge
+  const sx = 890, sy = P.y + P.h, sr = 108;
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 8;
+  ctx.fillStyle = theme; ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI*2); ctx.fill(); ctx.restore();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(sx, sy, sr-14, 0, Math.PI*2); ctx.stroke();
+  ctx.setLineDash([4,7]); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx, sy, sr-26, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; font(ctx, 800, 22, F_SANS); ls(ctx,'2px');
+  const sl = wrapLines(ctx, it.categoryTag.toUpperCase(), 130, 3);
+  font(ctx, 400, 26, F_SANS); ls(ctx,'0px'); ctx.fillText('✦', sx, sy - 10 - (sl.length-1)*13 - 14);
+  font(ctx, 800, 22, F_SANS); ls(ctx,'2px'); drawLines(ctx, sl, sx, sy + 22 - (sl.length-1)*13, 26); ls(ctx,'0px');
+  // text column
+  ctx.textAlign = 'left'; const x = 80; let y = P.y + P.h + 78;
+  ctx.fillStyle = theme; font(ctx, 700, 26, F_SANS); ls(ctx,'6px'); ctx.fillText(`◆ ${it.categoryTag.toUpperCase()}`, x, y, 690); ls(ctx,'0px');
+  const t = fitText(ctx, it.d.title, 800, F_SERIF, 104, 56, 760, 2);
+  ctx.fillStyle = ink; y += t.size + 6; y = drawLines(ctx, t.lines, x, y, t.size * 1.1);
+  font(ctx, 500, 38, F_SERIF, 'italic'); ctx.fillStyle = '#6d5f50';
+  y += 58; y = drawLines(ctx, wrapLines(ctx, it.d.phonetic, 920, 2), x, y, 48);
+  y += 34; ctx.fillStyle = theme; ctx.fillRect(x, y, 140, 5);
+  font(ctx, 600, 34, F_SANS); ctx.fillStyle = ink;
+  y += 58; y = drawLines(ctx, wrapLines(ctx, it.d.meaning, 920, 3), x, y, 46);
+  font(ctx, 400, 29, F_BODY_SERIF); ctx.fillStyle = '#3d342b';
+  y += 56; const n = linesFor(1800 - y + 44, 44);
+  if (n) drawLines(ctx, wrapLines(ctx, it.d.origin, 920, n), x, y, 44);
+  // footer
+  ctx.strokeStyle = ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(70, 1832); ctx.lineTo(1010, 1832); ctx.stroke();
+  font(ctx, 600, 22, F_SANS); ls(ctx,'3px'); ctx.fillStyle = '#6d5f50';
+  ctx.fillText(`@${slug(info.topic) || 'studio'}.journal`, 70, 1866); ctx.textAlign = 'right'; ctx.fillText('SWIPE FOR MORE →', 1010, 1866); ls(ctx,'0px');
+}
+
+function tplTikTok(ctx, it, img, info){
+  const theme = it.themeColor, nc = neon(theme);
+  drawPhoto(ctx, img, photoRect(2), it);
+  let g = ctx.createLinearGradient(0,0,0,420); g.addColorStop(0,'rgba(0,0,0,.65)'); g.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0,0,W,420);
+  g = ctx.createLinearGradient(0,880,0,H); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(0.45,'rgba(0,0,0,.6)'); g.addColorStop(1,'rgba(0,0,0,.92)'); ctx.fillStyle = g; ctx.fillRect(0,880,W,H-880);
+  // story progress bar
+  const n = Math.max(1, info.total), gap = 8, sw = (W - 80 - gap*(n-1)) / n;
+  for (let i=0;i<n;i++){ ctx.fillStyle = i < info.index ? '#fff' : 'rgba(255,255,255,.35)'; rrect(ctx, 40 + i*(sw+gap), 44, sw, 8, 4); ctx.fill();
+    if (i === info.index){ ctx.fillStyle = '#fff'; rrect(ctx, 40 + i*(sw+gap), 44, sw*0.6, 8, 4); ctx.fill(); } }
+  // neon badges
+  ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; let bx = 50;
+  const badge = (txt, fill, stroke, color) => {
+    font(ctx, 800, 34, F_HEAVY); const w = ctx.measureText(txt).width + 56;
+    ctx.save(); ctx.shadowColor = stroke; ctx.shadowBlur = 28; ctx.fillStyle = fill; rrect(ctx, bx, 92, w, 70, 35); ctx.fill();
+    ctx.lineWidth = 4; ctx.strokeStyle = stroke; ctx.stroke(); ctx.restore();
+    ctx.fillStyle = color; ctx.fillText(txt, bx + 28, 129); bx += w + 18;
+  };
+  badge('#' + it.categoryTag.replace(/\s+/g,''), 'rgba(0,0,0,.4)', nc, '#fff');
+  badge(`${info.index+1}/${info.total}`, nc, nc, '#0a0a0a');
+  if (bx < 820) badge('🔥 TRENDING', 'rgba(255,0,92,.85)', '#ff2d75', '#fff');
+  // sticker
+  ctx.save(); ctx.translate(860, 300); ctx.rotate(0.12); font(ctx, 900, 34, F_HEAVY);
+  const st = 'SAVE THIS 📌', stw = ctx.measureText(st).width + 48;
+  ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 20; ctx.fillStyle = '#fff'; rrect(ctx, -stw/2, -38, stw, 76, 16); ctx.fill();
+  ctx.shadowBlur = 0; ctx.fillStyle = '#111'; ctx.textAlign = 'center'; ctx.fillText(st, 0, 2); ctx.restore();
+  // bottom-up text stack
+  ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left'; const x = 60, maxW = 960; let y = 1858;
+  font(ctx, 600, 28, F_SANS); ctx.fillStyle = 'rgba(255,255,255,.85)';
+  ctx.fillText(`@${slug(info.topic) || 'studio'}  ·  ♪ original sound — ${info.topic}`, x, y, maxW); y -= 54;
+  font(ctx, 500, 30, F_SANS); const ol = wrapLines(ctx, it.d.origin, maxW - 64, 5);
+  if (it.d.origin.trim()) {
+    const bh = ol.length * 44 + 44; const top = y - bh;
+    ctx.fillStyle = 'rgba(0,0,0,.45)'; rrect(ctx, x - 8, top, maxW + 16, bh, 28); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.14)'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.93)'; drawLines(ctx, ol, x + 24, top + 54, 44); y = top - 34;
+  }
+  font(ctx, 800, 40, F_HEAVY); const ml = wrapLines(ctx, it.d.meaning, maxW - 60, 2);
+  if (it.d.meaning.trim()) {
+    const bh = ml.length * 54 + 30, top = y - bh, bw = Math.max(...ml.map(l => ctx.measureText(l).width)) + 50;
+    ctx.save(); ctx.translate(x, top); ctx.rotate(-0.018); ctx.fillStyle = '#ffe14d'; rrect(ctx, 0, 0, bw, bh, 14); ctx.fill();
+    ctx.fillStyle = '#111'; drawLines(ctx, ml, 25, 56, 54); ctx.restore(); y = top - 40;
+  }
+  font(ctx, 800, 44, F_HEAVY); ctx.save(); ctx.shadowColor = nc; ctx.shadowBlur = 24; ctx.fillStyle = nc;
+  ctx.fillText(wrapLines(ctx, it.d.phonetic, maxW, 1)[0] || '', x, y); ctx.restore(); y -= 66;
+  const t = fitText(ctx, it.d.title, 900, F_HEAVY, 136, 64, maxW, 3); const lh = t.size * 1.08;
+  const firstY = y - (t.lines.length - 1) * lh;
+  ctx.lineJoin = 'round'; ctx.strokeStyle = '#000'; ctx.lineWidth = Math.round(t.size * 0.12);
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 8; drawLines(ctx, t.lines, x, firstY, lh, 'stroke'); ctx.restore();
+  ctx.fillStyle = '#fff'; drawLines(ctx, t.lines, x, firstY, lh);
+}
+
+function tplWashi(ctx, it, img, info){
+  const theme = it.themeColor, inkC = '#2a1b10', P = photoRect(3);
+  ctx.drawImage(parchment(), 0, 0); ctx.fillStyle = rgba(theme, 0.06); ctx.fillRect(0,0,W,H);
+  // photo cutout, slightly rotated
+  const pcx = P.x + P.w/2, pcy = P.y + P.h/2, rot = -0.035;
+  ctx.save(); ctx.translate(pcx, pcy); ctx.rotate(rot); ctx.translate(-pcx, -pcy);
+  ctx.save(); ctx.shadowColor = 'rgba(60,40,20,.45)'; ctx.shadowBlur = 36; ctx.shadowOffsetY = 14;
+  ctx.fillStyle = '#fbf7ee'; ctx.fillRect(P.x-26, P.y-26, P.w+52, P.h+52); ctx.restore();
+  drawPhoto(ctx, img, P, it);
+  const tape = (x, y, a) => { ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.fillStyle = rgba(shade(theme, 0.55), 0.72); ctx.fillRect(-110, -28, 220, 56);
+    ctx.strokeStyle = rgba(shade(theme, 0.2), 0.35); ctx.lineWidth = 6; for (let i=-110;i<120;i+=26){ ctx.beginPath(); ctx.moveTo(i,-28); ctx.lineTo(i+20,28); ctx.stroke(); } ctx.restore(); };
+  tape(P.x + 10, P.y - 6, -0.7); tape(P.x + P.w - 10, P.y - 6, 0.7);
+  ctx.restore();
+  // vertical original title in left margin
+  ctx.fillStyle = rgba(inkC, 0.85); ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  const vt = [...it.originalTitle];
+  if (/[　-鿿]/.test(it.originalTitle)) { font(ctx, 800, 52, F_MINCHO); vt.slice(0, 9).forEach((ch, i) => ctx.fillText(ch, 70, 270 + i*62)); }
+  else { ctx.save(); ctx.translate(86, 200); ctx.rotate(Math.PI/2); font(ctx, 800, 44, F_MINCHO); ctx.textAlign = 'left'; ctx.fillText(it.originalTitle, 0, 0, 900); ctx.restore(); }
+  // hanko stamp
+  const stampTxt = /[　-鿿]/.test(it.originalTitle) ? [...it.originalTitle].filter(c => /[㐀-鿿]/.test(c)).slice(0,2).join('') || [...it.originalTitle][0] : it.originalTitle.slice(0,2).toUpperCase();
+  ctx.save(); ctx.translate(872, P.y + P.h + 24); ctx.rotate(0.14); ctx.globalAlpha = 0.9; ctx.drawImage(hankoStamp(stampTxt, '#b3242b'), -100, -100, 200, 200); ctx.restore();
+  // text block
+  ctx.textAlign = 'left'; const x = 110; let y = P.y + P.h + 120;
+  font(ctx, 500, 30, F_MINCHO); ls(ctx,'4px'); ctx.fillStyle = shade(theme, -0.35);
+  ctx.fillText(`${it.categoryTag} ・ 第${info.index+1}号`, x, y, 640); ls(ctx,'0px');
+  const t = fitText(ctx, it.d.title, 800, F_MINCHO, 110, 58, 860, 2); ctx.fillStyle = inkC;
+  y += t.size + 14; y = drawLines(ctx, t.lines, x, y, t.size * 1.12);
+  font(ctx, 500, 36, F_SERIF, 'italic'); ctx.fillStyle = '#7a4b2a';
+  y += 56; y = drawLines(ctx, wrapLines(ctx, it.d.phonetic, 860, 2), x, y, 46);
+  font(ctx, 600, 34, F_MINCHO); const ml = wrapLines(ctx, it.d.meaning, 830, 3);
+  y += 30; ctx.fillStyle = shade(theme, -0.4); ctx.fillRect(x, y, 7, ml.length * 46 + 6);
+  ctx.fillStyle = inkC; y = drawLines(ctx, ml, x + 28, y + 38, 46);
+  font(ctx, 500, 29, F_MINCHO); ctx.fillStyle = '#3b2a1c'; y += 62;
+  const n = linesFor(1790 - y + 46, 46); if (n) drawLines(ctx, wrapLines(ctx, it.d.origin, 860, n), x, y, 46);
+  // brush footer
+  ctx.strokeStyle = rgba(inkC, 0.8); ctx.lineCap = 'round'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(110, 1828);
+  ctx.bezierCurveTo(300, 1816, 600, 1842, 970, 1822); ctx.stroke(); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(140, 1840); ctx.bezierCurveTo(400, 1832, 700, 1850, 940, 1838); ctx.stroke();
+  ctx.textAlign = 'center'; font(ctx, 500, 28, F_MINCHO); ctx.fillStyle = inkC; ls(ctx,'6px'); ctx.fillText(`— ${info.topic} 図鑑 —`, W/2, 1886); ls(ctx,'0px');
+}
+
+function tplDarkLuxe(ctx, it, img, info){
+  const theme = it.themeColor, nc = neon(theme), P = photoRect(4);
+  ctx.fillStyle = '#06060a'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = 'rgba(212,175,55,.05)'; ctx.lineWidth = 2; // art-deco diagonal pattern
+  for (let i = -H; i < W; i += 48) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + H, H); ctx.stroke(); ctx.beginPath(); ctx.moveTo(i + H, 0); ctx.lineTo(i, H); ctx.stroke(); }
+  const glow = ctx.createRadialGradient(W/2, 640, 50, W/2, 640, 760); glow.addColorStop(0, rgba(nc, .28)); glow.addColorStop(1, rgba(nc, 0)); ctx.fillStyle = glow; ctx.fillRect(0,0,W,H);
+  const arch = (c, o=0) => { const x=P.x-o, y=P.y-o, w=P.w+o*2, h=P.h+o*2, r=w/2; c.moveTo(x, y+h); c.lineTo(x, y+r); c.arc(x+r, y+r, r, Math.PI, 0); c.lineTo(x+w, y+h); c.closePath(); };
+  drawPhoto(ctx, img, P, it, arch);
+  ctx.save(); ctx.beginPath(); arch(ctx); ctx.clip();
+  const fade = ctx.createLinearGradient(0, P.y + P.h*0.55, 0, P.y + P.h); fade.addColorStop(0,'rgba(6,6,10,0)'); fade.addColorStop(1,'rgba(6,6,10,.95)'); ctx.fillStyle = fade; ctx.fillRect(P.x, P.y, P.w, P.h);
+  ctx.fillStyle = 'rgba(0,0,0,.16)'; for (let y = P.y; y < P.y + P.h; y += 6) ctx.fillRect(P.x, y, P.w, 2); // scanlines
+  ctx.restore();
+  const gold = ctx.createLinearGradient(0, 0, W, H); gold.addColorStop(0,'#f7e7a1'); gold.addColorStop(0.5,'#d4af37'); gold.addColorStop(1,'#8a6d1f');
+  ctx.strokeStyle = gold; ctx.lineWidth = 4; ctx.beginPath(); arch(ctx, 16); ctx.stroke(); ctx.lineWidth = 1.5; ctx.beginPath(); arch(ctx, 30); ctx.stroke();
+  ctx.lineWidth = 3; ctx.strokeRect(36, 36, W-72, H-72); ctx.lineWidth = 1; ctx.strokeRect(52, 52, W-104, H-104);
+  [[36,36,1,1],[W-36,36,-1,1],[36,H-36,1,-1],[W-36,H-36,-1,-1]].forEach(([cx,cy,sx,sy]) => { // deco corners
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(cx + sx*120, cy + sy*30); ctx.lineTo(cx + sx*30, cy + sy*30); ctx.lineTo(cx + sx*30, cy + sy*120); ctx.stroke();
+    ctx.fillStyle = gold; ctx.save(); ctx.translate(cx + sx*30, cy + sy*30); ctx.rotate(Math.PI/4); ctx.fillRect(-9,-9,18,18); ctx.restore(); });
+  ctx.save(); ctx.shadowColor = nc; ctx.shadowBlur = 18; ctx.strokeStyle = nc; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(300, P.y + P.h + 48); ctx.lineTo(780, P.y + P.h + 48); ctx.stroke(); ctx.restore();
+  // centered text
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; const cx = W/2; let y = P.y + P.h + 112;
+  font(ctx, 700, 28, F_DECO); ls(ctx,'10px'); ctx.fillStyle = gold; ctx.fillText(it.categoryTag.toUpperCase(), cx, y, 860); ls(ctx,'0px');
+  const t = fitText(ctx, it.d.title, 900, F_DECO, 108, 54, 880, 2); y += t.size + 22;
+  ctx.save(); ctx.shadowColor = nc; ctx.shadowBlur = 46; ctx.fillStyle = '#fff6dc'; drawLines(ctx, t.lines, cx, y, t.size*1.12);
+  ctx.shadowColor = 'rgba(247,231,161,.9)'; ctx.shadowBlur = 14; y = drawLines(ctx, t.lines, cx, y, t.size*1.12); ctx.restore();
+  font(ctx, 500, 30, F_SANS); ls(ctx,'5px'); ctx.fillStyle = '#d4af37'; y += 60; y = drawLines(ctx, wrapLines(ctx, it.d.phonetic, 860, 2), cx, y, 42); ls(ctx,'0px');
+  y += 44; ctx.strokeStyle = gold; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx-170, y); ctx.lineTo(cx-26, y); ctx.moveTo(cx+26, y); ctx.lineTo(cx+170, y); ctx.stroke();
+  ctx.save(); ctx.translate(cx, y); ctx.rotate(Math.PI/4); ctx.fillStyle = gold; ctx.fillRect(-9,-9,18,18); ctx.restore();
+  font(ctx, 600, 34, F_SANS); ctx.fillStyle = '#efe9dc'; y += 62; y = drawLines(ctx, wrapLines(ctx, it.d.meaning, 860, 2), cx, y, 46);
+  font(ctx, 400, 28, F_BODY_SERIF); ctx.fillStyle = '#a9a293'; y += 58;
+  const n = linesFor(1780 - y + 44, 44); if (n) drawLines(ctx, wrapLines(ctx, it.d.origin, 840, n), cx, y, 44);
+  font(ctx, 700, 22, F_DECO); ls(ctx,'8px'); ctx.fillStyle = gold;
+  ctx.fillText(`◆ ${info.topic.toUpperCase()} COLLECTION · ${pad2(info.index+1)} ◆`, cx, 1836, 900); ls(ctx,'0px');
+}
+
+const TPL_FN = { 1:tplEditorial, 2:tplTikTok, 3:tplWashi, 4:tplDarkLuxe };
+function renderCard(ctx, it, img, info){
+  ctx.save(); ctx.clearRect(0,0,W,H); ls(ctx,'0px');
+  try { TPL_FN[info.template](ctx, it, img, info); }
+  catch (e) { console.error(e); ctx.fillStyle = '#300'; ctx.fillRect(0,0,W,H); ctx.fillStyle = '#fff'; font(ctx, 600, 36, F_SANS); ctx.fillText('Render error: ' + e.message, 40, 100); }
+  ctx.restore();
+}
+
+/* =====================================================================
+   IMAGE LOADING (CORS-safe, timeout → procedural fallback)
+   ===================================================================== */
+const imgCache = new Map();
+function loadImage(src){
+  if (!src) return Promise.resolve(null);
+  if (imgCache.has(src)) return imgCache.get(src);
+  const p = new Promise(res => {
+    const im = new Image(); let done = false;
+    const finish = v => { if (!done) { done = true; clearTimeout(t); res(v); } };
+    const t = setTimeout(() => finish(null), 15000);
+    if (!/^(data|blob):/.test(src)) im.crossOrigin = 'anonymous'; // keeps canvas exportable; non-CORS hosts fail → fallback
+    im.onload = () => finish(im.naturalWidth ? im : null);
+    im.onerror = () => finish(null);
+    im.src = src;
+  });
+  imgCache.set(src, p);
+  p.then(v => { if (!v) imgCache.delete(src); }); // allow retry later
+  return p;
+}
+const srcOf = it => it.customImage || it.image;
+
+let live = { src:null, img:null, status:'fallback' };
+function refreshImage(){
+  const it = curItem(); if (!it) return; const src = srcOf(it);
+  if (live.src === src && live.status !== 'loading') { scheduleRender(); return; }
+  live = { src, img:null, status: src ? 'loading' : 'fallback' }; updateImgStatus(); scheduleRender();
+  if (!src) return;
+  loadImage(src).then(img => { if (live.src !== src) return; live.img = img; live.status = img ? 'ok' : 'fallback'; updateImgStatus(); scheduleRender(); });
+}
+function updateImgStatus(){
+  const el = $('#imgStatus');
+  el.innerHTML = { loading:'<i class="fa-solid fa-circle-notch spin"></i> Loading image…', ok:'<i class="fa-solid fa-circle-check text-emerald-400"></i> Photo loaded',
+    fallback:'<i class="fa-solid fa-palette text-amber-400"></i> Procedural artwork' }[live.status];
+}
+
+/* =====================================================================
+   LIVE CANVAS
+   ===================================================================== */
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const canvas = $('#card'), cctx = canvas.getContext('2d');
+let rafId = 0;
+function scheduleRender(){ if (!rafId) rafId = requestAnimationFrame(() => { rafId = 0; renderLive(); }); }
+function renderLive(){
+  const it = curItem(); if (!it) { cctx.fillStyle = '#18181b'; cctx.fillRect(0,0,W,H); return; }
+  renderCard(cctx, it, live.img, { index:S.cur, total:S.items.length, topic:S.topic, template:S.template });
+}
+
+/* ---------- gestures: drag, wheel zoom, pinch zoom — never zooms the page ---------- */
+const stage = $('#stage');
+['gesturestart','gesturechange','gestureend'].forEach(ev => document.addEventListener(ev, e => { if (stage.contains(e.target)) e.preventDefault(); }, { passive:false }));
+stage.addEventListener('touchmove', e => e.preventDefault(), { passive:false });
+stage.addEventListener('touchstart', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive:false });
+
+const k2c = () => W / canvas.getBoundingClientRect().width; // client px → canvas px
+function toCanvas(cx, cy){ const r = canvas.getBoundingClientRect(), k = W / r.width; return { x:(cx - r.left)*k, y:(cy - r.top)*k }; }
+function zoomAt(p, factor){
+  const it = curItem(); if (!it) return; const v = it.view, R = photoRect(S.template);
+  const ns = Math.min(8, Math.max(0.2, v.scale * factor)), k = ns / v.scale;
+  const c = { x:R.x + R.w/2, y:R.y + R.h/2 };
+  v.ox = (p.x - c.x) - (p.x - c.x - v.ox) * k; v.oy = (p.y - c.y) - (p.y - c.y - v.oy) * k; v.scale = ns;
+  syncSlider(); scheduleRender(); saveState();
+}
+canvas.addEventListener('wheel', e => {
+  e.preventDefault(); hideHint();
+  zoomAt(toCanvas(e.clientX, e.clientY), Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015)));
+}, { passive:false });
+
+const pointers = new Map(); let pinch = null;
+canvas.addEventListener('pointerdown', e => { canvas.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x:e.clientX, y:e.clientY }); pinch = null; canvas.classList.add('dragging'); hideHint(); });
+canvas.addEventListener('pointermove', e => {
+  if (!pointers.has(e.pointerId)) return; const it = curItem(); if (!it) return;
+  const prev = pointers.get(e.pointerId); pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  if (pointers.size === 1) {
+    const k = k2c(); it.view.ox += (e.clientX - prev.x) * k; it.view.oy += (e.clientY - prev.y) * k; scheduleRender(); saveState();
+  } else {
+    const [a, b] = [...pointers.values()];
+    const d = Math.hypot(a.x - b.x, a.y - b.y), mid = { x:(a.x + b.x)/2, y:(a.y + b.y)/2 };
+    if (pinch && pinch.d > 0) {
+      const k = k2c(); it.view.ox += (mid.x - pinch.mid.x) * k; it.view.oy += (mid.y - pinch.mid.y) * k;
+      zoomAt(toCanvas(mid.x, mid.y), d / pinch.d);
+    }
+    pinch = { d, mid };
+  }
+});
+const endPointer = e => { pointers.delete(e.pointerId); pinch = null; if (!pointers.size) canvas.classList.remove('dragging'); };
+['pointerup','pointercancel','lostpointercapture'].forEach(ev => canvas.addEventListener(ev, endPointer));
+function hideHint(){ $('#stageHint').style.opacity = 0; }
+
+function syncSlider(){ const s = Math.round((curItem()?.view.scale || 1) * 100); $('#scaleSlider').value = s; $('#scaleLabel').textContent = s + '%'; }
+$('#scaleSlider').addEventListener('input', e => {
+  const it = curItem(); if (!it) return; const R = photoRect(S.template);
+  zoomAt({ x:R.x + R.w/2 + it.view.ox, y:R.y + R.h/2 + it.view.oy }, (+e.target.value / 100) / it.view.scale);
+});
+$('#resetViewBtn').addEventListener('click', () => { const it = curItem(); if (!it) return; Object.assign(it.view, { scale:1, ox:0, oy:0 }); syncSlider(); scheduleRender(); saveState(); });
+$('#filterSelect').addEventListener('change', e => { const it = curItem(); if (!it) return; it.view.filter = e.target.value; scheduleRender(); saveState(); });
+$('#fileInput').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return; const rd = new FileReader();
+  rd.onload = () => { setCustomImage(rd.result); toast('Image uploaded', 'ok'); }; rd.readAsDataURL(f); e.target.value = '';
+});
+$('#imgUrlInput').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.value.trim()) { setCustomImage(e.target.value.trim()); e.target.value = ''; } });
+$('#clearImgBtn').addEventListener('click', () => { const it = curItem(); if (!it) return; it.customImage = ''; Object.assign(it.view, { scale:1, ox:0, oy:0 }); syncSlider(); refreshImage(); renderList(); saveState(); });
+function setCustomImage(src, it = curItem()){
+  if (!it) return; it.customImage = src; Object.assign(it.view, { scale:1, ox:0, oy:0 });
+  if (it === curItem()) { syncSlider(); refreshImage(); }
+  renderList(); saveState();
+}
+
+/* =====================================================================
+   UI: TEMPLATES, LIST, EDITOR, TABS
+   ===================================================================== */
+function renderTplBar(){
+  $('#tplBar').innerHTML = TEMPLATES.map(t => `<button class="tpl-btn btn btn-ghost !px-2 flex-col !gap-1 text-[11px]" data-tpl="${t.id}" aria-pressed="${S.template===t.id}">
+    <i class="fa-solid ${t.icon} text-base"></i>${t.name}</button>`).join('');
+}
+$('#tplBar').addEventListener('click', e => { const b = e.target.closest('[data-tpl]'); if (!b) return; S.template = +b.dataset.tpl; renderTplBar(); scheduleRender(); saveState(); });
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+function renderList(){
+  const q = $('#searchInput').value.trim().toLowerCase();
+  $('#itemCount').textContent = `(${S.items.length})`;
+  $('#itemList').innerHTML = S.items.map((it, i) => {
+    const hay = [it.originalTitle, it.phonetic, it.categoryTag, it.d.title].join(' ').toLowerCase();
+    if (q && !hay.includes(q)) return '';
+    return `<li><div class="item-row group flex items-center gap-2.5 p-2 rounded-xl border border-transparent hover:bg-zinc-800/60 cursor-pointer" data-idx="${i}" aria-current="${i===S.cur}" role="button" tabindex="0">
+      <span class="w-9 h-9 rounded-lg shrink-0 grid place-items-center text-white text-sm font-bold" style="background:linear-gradient(135deg,${it.themeColor},${shade(it.themeColor,-0.5)})">${esc([...it.originalTitle][0] || '?')}</span>
+      <span class="min-w-0 flex-1"><span class="block text-sm font-semibold truncate">${esc(it.originalTitle)}</span><span class="block text-[11px] text-zinc-500 truncate">${esc(it.phonetic)}</span></span>
+      ${it.customImage ? '<i class="fa-solid fa-image text-[10px] text-pink-400" title="Custom image"></i>' : ''}
+      <button class="del-btn opacity-0 group-hover:opacity-100 focus:opacity-100 text-zinc-500 hover:text-rose-400 px-1" data-del="${i}" title="Delete item"><i class="fa-solid fa-trash-can text-xs"></i></button>
+    </div></li>`;
+  }).join('') || '<li class="text-xs text-zinc-500 p-2">No items.</li>';
+}
+$('#searchInput').addEventListener('input', renderList);
+$('#itemList').addEventListener('click', e => {
+  const del = e.target.closest('[data-del]');
+  if (del) { e.stopPropagation(); const i = +del.dataset.del; if (S.items.length <= 1) return toast('Keep at least one item.', 'warn');
+    if (!confirm(`Delete “${S.items[i].originalTitle}”?`)) return; S.items.splice(i, 1); selectItem(Math.min(S.cur, S.items.length - 1)); return; }
+  const row = e.target.closest('[data-idx]'); if (row) selectItem(+row.dataset.idx);
+});
+$('#itemList').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.dataset.idx) selectItem(+e.target.dataset.idx); });
+
+function selectItem(i){
+  S.cur = Math.max(0, Math.min(i, S.items.length - 1)); const it = curItem();
+  renderList(); fillEditor(); syncSlider(); $('#filterSelect').value = it?.view.filter || 'normal';
+  $('#audioEl').classList.add('hidden'); $('#audioDl').classList.add('hidden');
+  if (it) ensureFonts(Object.values(it.d).join('') + it.originalTitle).then(scheduleRender);
+  refreshImage(); saveState();
+}
+const FIELD_MAP = { fTitle:'title', fPhonetic:'phonetic', fMeaning:'meaning', fOrigin:'origin' };
+function fillEditor(){
+  const it = curItem(); if (!it) return;
+  for (const [id, k] of Object.entries(FIELD_MAP)) $('#' + id).value = it.d[k];
+  $('#fCategory').value = it.categoryTag; $('#fColor').value = it.themeColor;
+  if (it.lang && it.lang !== 'original') $('#langSelect').value = it.lang;
+}
+for (const [id, k] of Object.entries(FIELD_MAP)) $('#' + id).addEventListener('input', e => { const it = curItem(); if (!it) return; it.d[k] = e.target.value; scheduleRender(); saveState(); if (k === 'title') renderList(); });
+$('#fCategory').addEventListener('input', e => { const it = curItem(); if (!it) return; it.categoryTag = e.target.value; scheduleRender(); saveState(); });
+$('#fColor').addEventListener('input', e => { const it = curItem(); if (!it) return; it.themeColor = e.target.value; scheduleRender(); renderList(); saveState(); });
+$('#revertTextBtn').addEventListener('click', () => { const it = curItem(); if (!it) return;
+  it.d = { title:it.originalTitle, phonetic:it.phonetic, meaning:it.meaning, origin:it.origin }; it.lang = 'original'; fillEditor(); scheduleRender(); saveState(); });
+
+$$('.tab-btn').forEach(b => b.addEventListener('click', () => {
+  $$('.tab-btn').forEach(x => x.setAttribute('aria-selected', x === b)); $$('.tab-panel').forEach(p => p.classList.toggle('hidden', p.id !== b.dataset.tab));
+}));
+
+/* ---------- modals & toast ---------- */
+function openModal(id){ $('#' + id).classList.add('open'); }
+function closeModal(el){ (typeof el === 'string' ? $('#' + el) : el).classList.remove('open'); }
+$$('[data-open]').forEach(b => b.addEventListener('click', () => openModal(b.dataset.open)));
+$$('.modal').forEach(m => { m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-close]')) closeModal(m); }); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $$('.modal.open').forEach(closeModal); });
+
+let toastT;
+function toast(msg, type='info'){
+  const el = $('#toast'); const cls = { info:'bg-zinc-900 border-zinc-700', ok:'bg-emerald-950 border-emerald-700', warn:'bg-amber-950 border-amber-700', err:'bg-rose-950 border-rose-700' }[type];
+  el.className = `fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] max-w-[92vw] px-4 py-2.5 rounded-xl text-sm shadow-2xl border ${cls}`;
+  el.textContent = msg; clearTimeout(toastT); toastT = setTimeout(() => el.classList.add('hidden'), type === 'err' ? 6500 : 3200);
+}
+async function busy(btn, fn){
+  const html = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch spin"></i>Working…';
+  try { return await fn(); } catch (e) { console.error(e); toast(e.message || String(e), 'err'); } finally { btn.disabled = false; btn.innerHTML = html; }
+}
+
+/* =====================================================================
+   SETTINGS
+   ===================================================================== */
+function setTopic(t){ S.topic = (t || DEFAULT_TOPIC).trim() || DEFAULT_TOPIC; $('#topicTitle').textContent = S.topic; document.title = `${S.topic} 9:16 Vertical Content Studio`; }
+function refreshKeyDot(){ $('#keyDot').className = `w-2 h-2 rounded-full ${S.settings.apiKey ? 'bg-emerald-400' : 'bg-rose-500'}`; }
+$('[data-open="settingsModal"]').addEventListener('click', () => {
+  $('#topicInput').value = S.topic; $('#apiKeyInput').value = S.settings.apiKey;
+  $('#mText').value = S.settings.textModel; $('#mImage').value = S.settings.imageModel; $('#mTts').value = S.settings.ttsModel;
+});
+$('#saveSettingsBtn').addEventListener('click', () => {
+  Object.assign(S.settings, { apiKey:$('#apiKeyInput').value.trim(), textModel:$('#mText').value.trim() || 'gemini-3-flash-preview',
+    imageModel:$('#mImage').value.trim() || 'gemini-3.1-flash-image', ttsModel:$('#mTts').value.trim() || 'gemini-2.5-flash-preview-tts' });
+  lsSet(LS_SETTINGS, S.settings); setTopic($('#topicInput').value); refreshKeyDot(); scheduleRender(); saveState(); closeModal('settingsModal'); toast('Settings saved', 'ok');
+});
+$('#voiceSelect').addEventListener('change', e => { S.settings.voice = e.target.value; lsSet(LS_SETTINGS, S.settings); });
+
+/* =====================================================================
+   GEMINI API
+   ===================================================================== */
+async function gemini(model, body){
+  if (!S.settings.apiKey) { $('[data-open="settingsModal"]').click(); throw new Error('Add your Gemini API key in Settings first.'); }
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+    method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':S.settings.apiKey }, body:JSON.stringify(body) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(`Gemini (${model}): ${j.error?.message || 'HTTP ' + r.status}`);
+  return j;
+}
+const partsOf = j => j.candidates?.[0]?.content?.parts || [];
+const textOf = j => partsOf(j).filter(p => !p.thought).map(p => p.text || '').join('').trim();
+function parseJSONLoose(s){
+  try { return JSON.parse(s); } catch {}
+  const m = s.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) { try { return JSON.parse(m[1]); } catch {} }
+  const a = [s.indexOf('['), s.indexOf('{')].filter(i => i >= 0), b = Math.max(s.lastIndexOf(']'), s.lastIndexOf('}'));
+  if (a.length && b > Math.min(...a)) return JSON.parse(s.slice(Math.min(...a), b + 1));
+  throw new Error('Could not parse the AI JSON response.');
+}
+async function geminiJSON(prompt, schema){
+  const j = await gemini(S.settings.textModel, { contents:[{ role:'user', parts:[{ text:prompt }] }],
+    generationConfig:{ responseMimeType:'application/json', responseSchema:schema, temperature:0.6 } });
+  return parseJSONLoose(textOf(j));
+}
+const ITEM_SCHEMA = { type:'OBJECT', properties:{
+  originalTitle:{ type:'STRING', description:'Name in its original language/script (kanji, native name, etc.)' },
+  phonetic:{ type:'STRING', description:'Reading / pronunciation / romanization, plus scientific or latin name if relevant, joined with " · "' },
+  meaning:{ type:'STRING', description:'One-sentence summary, flavor profile or status (max ~110 chars)' },
+  origin:{ type:'STRING', description:'Detailed background: etymology, history, habitat or cultural story (60-90 words)' },
+  categoryTag:{ type:'STRING', description:'Short category label, 1-3 words' },
+  themeColor:{ type:'STRING', description:'Hex color like #8B5A2B evoking the item' },
+  wikimediaFile:{ type:'STRING', description:'Exact Wikimedia Commons file name of a photo if confidently known, else empty string' }
+}, required:['originalTitle','phonetic','meaning','origin','categoryTag','themeColor'] };
+function itemFromAI(o, i){ const it = makeItem({ ...o, image: o.wikimediaFile ? wm(o.wikimediaFile.replace(/^File:/i,'').replace(/ /g,'_')) : '' }, i); return it; }
+
+/* ---------- translation ---------- */
+LANGS.forEach(l => $('#langSelect').insertAdjacentHTML('beforeend', `<option>${l}</option>`));
+$('#translateBtn').addEventListener('click', e => busy(e.currentTarget, async () => {
+  const it = curItem(), lang = $('#langSelect').value;
+  const res = await geminiJSON(
+`Translate this short-video card about "${it.originalTitle}" into ${lang}. Keep it natural, vivid and concise.
+Return JSON:
+- translatedName: the item's common name in ${lang}. If ${lang} is the same language/script as the original title "${it.originalTitle}", return a short descriptive subtitle in ${lang} instead (never just repeat the original).
+- phonetic: a pronunciation guide useful for ${lang} speakers (keep any scientific/latin name).
+- meaning: translated short meaning.
+- origin: translated detailed background.
+
+Source:
+phonetic: ${it.phonetic}
+meaning: ${it.meaning}
+origin: ${it.origin}`,
+    { type:'OBJECT', properties:{ translatedName:{type:'STRING'}, phonetic:{type:'STRING'}, meaning:{type:'STRING'}, origin:{type:'STRING'} }, required:['translatedName','phonetic','meaning','origin'] });
+  // TITLE RULE: original-language title always first, then the translation
+  const tn = String(res.translatedName || '').trim();
+  const title = tn && tn !== it.originalTitle ? `${it.originalTitle} / ${tn.replace(new RegExp('^' + it.originalTitle.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\s*/\\s*'), '')}` : it.originalTitle;
+  it.d = { title, phonetic:res.phonetic || it.phonetic, meaning:res.meaning || it.meaning, origin:res.origin || it.origin }; it.lang = lang;
+  fillEditor(); await ensureFonts(Object.values(it.d).join('')); scheduleRender(); renderList(); saveState(); toast(`Translated to ${lang}`, 'ok');
+}));
+
+/* ---------- AI background image ---------- */
+async function generateImageFor(it, style, extra=''){
+  const prompt = `Photorealistic, high-resolution vertical 9:16 photograph of ${it.originalTitle} (${it.phonetic}). ${it.meaning}
+Context: ${it.origin.slice(0, 400)}
+Style: ${style}. ${extra}
+Composition: subject in the upper-middle of the frame with natural negative space in the lower third for text overlays. Absolutely no text, letters, logos or watermarks.`;
+  const j = await gemini(S.settings.imageModel, { contents:[{ role:'user', parts:[{ text:prompt }] }],
+    generationConfig:{ responseModalities:['TEXT','IMAGE'], imageConfig:{ aspectRatio:'9:16' } } });
+  const p = partsOf(j).find(p => p.inlineData?.data || p.inline_data?.data);
+  if (!p) throw new Error(textOf(j) || 'No image returned (the request may have been blocked).');
+  const d = p.inlineData || p.inline_data;
+  return `data:${d.mimeType || d.mime_type || 'image/png'};base64,${d.data}`;
+}
+$('#genImgBtn').addEventListener('click', e => busy(e.currentTarget, async () => {
+  const it = curItem(); const url = await generateImageFor(it, $('#imgStyle').value, $('#imgExtra').value);
+  setCustomImage(url, it); toast('AI background applied', 'ok');
+}));
+
+/* ---------- TTS audio guide ---------- */
+function pcmToWav(b64, rate=24000){
+  const pcm = Uint8Array.from(atob(b64), c => c.charCodeAt(0)), buf = new ArrayBuffer(44 + pcm.length), v = new DataView(buf);
+  const w = (o, s) => [...s].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  w(0,'RIFF'); v.setUint32(4, 36 + pcm.length, true); w(8,'WAVE'); w(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24, rate, true); v.setUint32(28, rate*2, true); v.setUint16(32,2,true); v.setUint16(34,16,true); w(36,'data'); v.setUint32(40, pcm.length, true);
+  new Uint8Array(buf, 44).set(pcm); return new Blob([buf], { type:'audio/wav' });
+}
+let audioUrl = null;
+const narrationText = it => `${it.d.title}. ${it.d.phonetic}. ${it.d.meaning} ${it.d.origin}`;
+$('#ttsBtn').addEventListener('click', e => busy(e.currentTarget, async () => {
+  const it = curItem();
+  const j = await gemini(S.settings.ttsModel, {
+    contents:[{ parts:[{ text:`Narrate warmly and clearly, like an engaging short-video documentary host, in the language the text is written in:\n${narrationText(it)}` }] }],
+    generationConfig:{ responseModalities:['AUDIO'], speechConfig:{ voiceConfig:{ prebuiltVoiceConfig:{ voiceName:$('#voiceSelect').value } } } } });
+  const p = partsOf(j).find(p => p.inlineData?.data || p.inline_data?.data); if (!p) throw new Error('No audio returned.');
+  const d = p.inlineData || p.inline_data, mime = d.mimeType || d.mime_type || '';
+  const blob = /wav|mpeg|mp3|ogg/.test(mime) ? new Blob([Uint8Array.from(atob(d.data), c => c.charCodeAt(0))], { type:mime }) : pcmToWav(d.data, +(mime.match(/rate=(\d+)/)?.[1] || 24000));
+  if (audioUrl) URL.revokeObjectURL(audioUrl); audioUrl = URL.createObjectURL(blob);
+  const a = $('#audioEl'); a.src = audioUrl; a.classList.remove('hidden'); a.play().catch(() => {});
+  const dl = $('#audioDl'); dl.href = audioUrl; dl.download = `${fileBase(it)}-audio.wav`; dl.classList.remove('hidden');
+}));
+$('#browserTtsBtn').addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return toast('Browser speech not supported.', 'warn');
+  speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(narrationText(curItem()));
+  const lang = { Japanese:'ja-JP', 'Chinese (Simplified)':'zh-CN', 'Chinese (Traditional)':'zh-TW', Korean:'ko-KR', Spanish:'es-ES', French:'fr-FR', German:'de-DE', Italian:'it-IT', Portuguese:'pt-BR', Thai:'th-TH', Vietnamese:'vi-VN', Indonesian:'id-ID', Hindi:'hi-IN', Arabic:'ar-SA', Russian:'ru-RU', English:'en-US' }[curItem().lang];
+  if (lang) u.lang = lang; speechSynthesis.speak(u);
+});
+
+/* ---------- captions ---------- */
+$('#captionBtn').addEventListener('click', e => busy(e.currentTarget, async () => {
+  const it = curItem(), platform = $('#platformSelect').value, lang = it.lang !== 'original' ? it.lang : 'English';
+  const j = await gemini(S.settings.textModel, { contents:[{ role:'user', parts:[{ text:
+`Write a ready-to-post ${platform} caption in ${lang} for a 9:16 vertical video card from the "${S.topic}" series.
+Item: ${it.d.title} (${it.d.phonetic}). Summary: ${it.d.meaning}. Background: ${it.d.origin}
+Requirements: a scroll-stopping hook line, 2-4 short punchy lines with tasteful emojis, a call to action (save/follow/comment), then 10-15 relevant hashtags (mix broad + niche).${platform.startsWith('All') ? ' Provide three labeled versions: TikTok, Instagram Reels, YouTube Shorts (Shorts version starts with a title line).' : ''}
+Output ONLY the caption text, no preamble.` }] }], generationConfig:{ temperature:0.9 } });
+  $('#captionOut').value = textOf(j); toast('Caption ready', 'ok');
+}));
+$('#copyCaptionBtn').addEventListener('click', async () => {
+  const ta = $('#captionOut'); if (!ta.value) return toast('Generate a caption first.', 'warn');
+  try { await navigator.clipboard.writeText(ta.value); } catch { ta.select(); document.execCommand('copy'); }
+  toast('Caption copied!', 'ok');
+});
+
+/* ---------- AI custom item creator ---------- */
+$('#addItemBtn').addEventListener('click', e => busy(e.currentTarget, async () => {
+  const q = $('#addPrompt').value.trim(); if (!q) throw new Error('Describe the item first.');
+  const o = await geminiJSON(`Create one dataset entry for a 9:16 educational short-video card series about "${S.topic}". The item: ${q}
+Fill every field accurately. Use the item's original language/script for originalTitle.`, ITEM_SCHEMA);
+  const it = itemFromAI(o, S.items.length); S.items.push(it); selectItem(S.items.length - 1);
+  closeModal('addModal'); $('#addPrompt').value = ''; toast(`Added “${it.originalTitle}”`, 'ok');
+  if ($('#addGenImg').checked) { toast('Generating background…'); try { setCustomImage(await generateImageFor(it, $('#imgStyle').value), it); toast('AI background applied', 'ok'); } catch (err) { toast(err.message, 'err'); } }
+}));
+
+/* ---------- import source → dataset ---------- */
+$('#importBtn').addEventListener('click', e => busy(e.currentTarget, async () => {
+  const src = $('#importText').value.trim(); if (!src) throw new Error('Paste a URL or some text first.');
+  const isUrl = /^https?:\/\/\S+$/i.test(src.split(/\s+/)[0]) && src.length < 2000;
+  const instr = `Extract ALL key items from the source into a dataset for a 9:16 vertical educational card series.
+Return JSON: {"topic": short series topic name (1-3 words), "items": [ { originalTitle, phonetic, meaning, origin, categoryTag, themeColor, wikimediaFile } ] }
+Field rules: originalTitle = original name/kanji/scientific name in its original script; phonetic = reading/pronunciation/latin name; meaning = short summary/flavor profile/status (<=110 chars); origin = detailed background/etymology/habitat story (60-90 words); categoryTag = 1-3 words; themeColor = hex like #8B5A2B; wikimediaFile = exact Commons file name if confidently known else "".`;
+  let res;
+  if (isUrl) {
+    const j = await gemini(S.settings.textModel, { contents:[{ role:'user', parts:[{ text:`${instr}\nSource URL: ${src}\nRead the page, then output ONLY the JSON object.` }] }], tools:[{ url_context:{} }] });
+    res = parseJSONLoose(textOf(j));
+  } else {
+    res = await geminiJSON(`${instr}\n\nSOURCE:\n${src.slice(0, 60000)}`, { type:'OBJECT', properties:{ topic:{ type:'STRING' }, items:{ type:'ARRAY', items:ITEM_SCHEMA } }, required:['topic','items'] });
+  }
+  const arr = Array.isArray(res) ? res : res.items; if (!arr?.length) throw new Error('No items found in the source.');
+  const items = arr.map((o, i) => itemFromAI(o, i));
+  const replace = document.querySelector('input[name=importMode]:checked').value === 'replace';
+  if (replace) { S.items = items; if (res.topic) setTopic(res.topic); selectItem(0); } else { S.items.push(...items); selectItem(S.items.length - items.length); }
+  closeModal('importModal'); toast(`Imported ${items.length} items`, 'ok');
+}));
+
+$('#resetDataBtn').addEventListener('click', () => {
+  if (!confirm('Restore the default dataset? Your edits and imported items will be lost.')) return;
+  S.items = DEFAULT_DATA.map(makeItem); setTopic(DEFAULT_TOPIC); selectItem(0);
+});
+
+/* =====================================================================
+   EXPORT
+   ===================================================================== */
+function slug(s){ return String(s || '').normalize('NFKD').toLowerCase().replace(/[^\w]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40); }
+function fileBase(it, idx = S.items.indexOf(it)){ return `${slug(S.topic) || 'studio'}-${pad2(idx + 1)}-${slug(it.phonetic.split('·')[0]) || slug(it.id) || 'card'}-t${S.template}`; }
+function triggerDownload(href, name){ const a = document.createElement('a'); a.href = href; a.download = name; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); }
+async function ensureFonts(sample=''){
+  if (!document.fonts) return;
+  try { await Promise.race([Promise.all(FONT_SPECS.map(f => document.fonts.load(f, sample + 'Aa'))), new Promise(r => setTimeout(r, 4000))]); } catch {}
+}
+
+$('#exportBtn').addEventListener('click', e => busy(e.currentTarget, async () => {
+  const it = curItem(); await ensureFonts(Object.values(it.d).join('') + it.originalTitle);
+  if (live.status === 'loading') { const img = await loadImage(live.src); if (live.src === srcOf(it)) { live.img = img; live.status = img ? 'ok' : 'fallback'; updateImgStatus(); } }
+  renderLive(); const name = fileBase(it) + '.png';
+  let dataUrl; try { dataUrl = canvas.toDataURL('image/png'); } catch { throw new Error('This image host blocks export (CORS). Upload the file instead.'); }
+  canvas.toBlob(b => { if (!b) return; const u = URL.createObjectURL(b); triggerDownload(u, name); setTimeout(() => URL.revokeObjectURL(u), 15000); }, 'image/png');
+  // Fallback preview: always shown so mobile / iframe users can long-press → Save Image
+  $('#exportImg').src = dataUrl; const dl = $('#exportDl'); dl.href = dataUrl; dl.download = name; openModal('exportModal');
+}));
+
+let batchUrls = [], batchRun = 0;
+$('#batchBtn').addEventListener('click', async () => {
+  const run = ++batchRun; batchUrls.forEach(u => URL.revokeObjectURL(u.url)); batchUrls = [];
+  const grid = $('#batchGrid'), bar = $('#batchBar'), dlAll = $('#dlAllBtn'), n = S.items.length;
+  grid.innerHTML = S.items.map((it, i) => `<figure class="space-y-1.5" id="bcell-${i}"><div class="aspect-[9/16] rounded-lg bg-zinc-800 grid place-items-center text-zinc-500"><i class="fa-solid fa-circle-notch spin"></i></div>
+    <figcaption class="text-[11px] text-zinc-400 truncate">${pad2(i+1)} · ${esc(it.originalTitle)}</figcaption></figure>`).join('');
+  bar.style.width = '0'; dlAll.disabled = true; $('#batchCount').textContent = `(0 / ${n})`; openModal('batchModal');
+  await ensureFonts(S.items.map(it => Object.values(it.d).join('') + it.originalTitle).join(''));
+  const off = document.createElement('canvas'); off.width = W; off.height = H; const octx = off.getContext('2d');
+  for (let i = 0; i < n; i++) {
+    if (run !== batchRun) return;
+    const it = S.items[i], img = await loadImage(srcOf(it));
+    renderCard(octx, it, img, { index:i, total:n, topic:S.topic, template:S.template });
+    const blob = await new Promise(r => { try { off.toBlob(r, 'image/png'); } catch { r(null); } });
+    const cell = $('#bcell-' + i); if (!cell) return;
+    if (blob) {
+      const url = URL.createObjectURL(blob), name = fileBase(it, i) + '.png'; batchUrls.push({ url, name });
+      cell.firstElementChild.outerHTML = `<img src="${url}" alt="${esc(it.originalTitle)} card" class="w-full rounded-lg ring-1 ring-zinc-700" style="-webkit-touch-callout:default">`;
+      cell.querySelector('figcaption').insertAdjacentHTML('beforeend', ` <a href="${url}" download="${esc(name)}" class="text-amber-400 hover:underline ml-1"><i class="fa-solid fa-download"></i></a>`);
+    } else cell.firstElementChild.innerHTML = '<span class="text-xs text-rose-400 p-2 text-center">Export blocked</span>';
+    bar.style.width = `${(i + 1) / n * 100}%`; $('#batchCount').textContent = `(${i + 1} / ${n})`;
+    await new Promise(r => setTimeout(r, 0));
+  }
+  dlAll.disabled = false;
+});
+$('#dlAllBtn').addEventListener('click', async e => { e.currentTarget.disabled = true; for (const f of batchUrls) { triggerDownload(f.url, f.name); await new Promise(r => setTimeout(r, 450)); } e.currentTarget.disabled = false; });
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+(function init(){
+  const st = lsGet(LS_SETTINGS); if (st) Object.assign(S.settings, st);
+  $('#voiceSelect').value = S.settings.voice || 'Kore';
+  const saved = lsGet(LS_STATE);
+  if (saved?.items?.length) { S.items = saved.items.map(makeItem); S.template = saved.template || 1; S.cur = saved.cur || 0; setTopic(saved.topic); }
+  else { S.items = DEFAULT_DATA.map(makeItem); setTopic(DEFAULT_TOPIC); }
+  refreshKeyDot(); renderTplBar(); selectItem(S.cur);
+  if (document.fonts) { document.fonts.addEventListener?.('loadingdone', scheduleRender); document.fonts.ready.then(scheduleRender); }
+  setTimeout(hideHint, 6000);
+})();
+</script>
+</body>
+</html>
