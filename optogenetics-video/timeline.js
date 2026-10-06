@@ -1,0 +1,197 @@
+window.TL = {
+ "voice": "am_michael",
+ "speed": 1.22,
+ "sr": 24000,
+ "total": 77.201,
+ "chunks": [
+  {
+   "i": 0,
+   "scene": 1,
+   "text": "Neuroscientists can now fire lasers into a living brain",
+   "start": 0.6,
+   "end": 3.609
+  },
+  {
+   "i": 1,
+   "scene": 1,
+   "text": "to instantly control an animal's movements.",
+   "start": 3.739,
+   "end": 6.056
+  },
+  {
+   "i": 2,
+   "scene": 2,
+   "text": "But this sci-fi reality was actually hijacked",
+   "start": 6.586,
+   "end": 9.101
+  },
+  {
+   "i": 3,
+   "scene": 2,
+   "text": "from an 1866 observation of green pond scum.",
+   "start": 9.231,
+   "end": 12.531
+  },
+  {
+   "i": 4,
+   "scene": 3,
+   "text": "A biologist noticed that microscopic algae",
+   "start": 13.061,
+   "end": 15.504
+  },
+  {
+   "i": 5,
+   "scene": 3,
+   "text": "possessed a natural light sensor,",
+   "start": 15.634,
+   "end": 17.373
+  },
+  {
+   "i": 6,
+   "scene": 3,
+   "text": "allowing them to actively swim toward the perfect level of sunlight.",
+   "start": 17.553,
+   "end": 20.863
+  },
+  {
+   "i": 7,
+   "scene": 4,
+   "text": "A century later, scientists realized",
+   "start": 21.393,
+   "end": 23.474
+  },
+  {
+   "i": 8,
+   "scene": 4,
+   "text": "the algae reacted to light in just half a millisecond,",
+   "start": 23.604,
+   "end": 26.485
+  },
+  {
+   "i": 9,
+   "scene": 4,
+   "text": "faster than human vision.",
+   "start": 26.665,
+   "end": 28.031
+  },
+  {
+   "i": 10,
+   "scene": 5,
+   "text": "The secret was an elegant two-in-one protein on the cell surface",
+   "start": 28.561,
+   "end": 32.23
+  },
+  {
+   "i": 11,
+   "scene": 5,
+   "text": "that directly detects light while acting as a tightly closed gate.",
+   "start": 32.36,
+   "end": 35.802
+  },
+  {
+   "i": 12,
+   "scene": 6,
+   "text": "When light hits it, the gate immediately snaps open.",
+   "start": 36.282,
+   "end": 39.027
+  },
+  {
+   "i": 13,
+   "scene": 6,
+   "text": "Ions rush inside, creating an instant electrical signal,",
+   "start": 39.357,
+   "end": 42.953
+  },
+  {
+   "i": 14,
+   "scene": 7,
+   "text": "a protein called channelrhodopsin.",
+   "start": 43.233,
+   "end": 45.168
+  },
+  {
+   "i": 15,
+   "scene": 8,
+   "text": "This sparked a wild idea.",
+   "start": 45.798,
+   "end": 47.277
+  },
+  {
+   "i": 16,
+   "scene": 8,
+   "text": "What if we transplanted this exact algal gate",
+   "start": 47.607,
+   "end": 49.847
+  },
+  {
+   "i": 17,
+   "scene": 8,
+   "text": "into a mammalian nerve cell?",
+   "start": 49.927,
+   "end": 51.332
+  },
+  {
+   "i": 18,
+   "scene": 9,
+   "text": "It worked.",
+   "start": 51.862,
+   "end": 52.517
+  },
+  {
+   "i": 19,
+   "scene": 9,
+   "text": "The neuron turned into a biological switch fired by light,",
+   "start": 52.897,
+   "end": 56.128
+  },
+  {
+   "i": 20,
+   "scene": 9,
+   "text": "a technique named optogenetics.",
+   "start": 56.358,
+   "end": 58.229
+  },
+  {
+   "i": 21,
+   "scene": 10,
+   "text": "Today, scientists thread tiny optical fibers into living brains.",
+   "start": 58.859,
+   "end": 62.661
+  },
+  {
+   "i": 22,
+   "scene": 10,
+   "text": "By pulsing light, they activate these hijacked neurons",
+   "start": 62.991,
+   "end": 66.031
+  },
+  {
+   "i": 23,
+   "scene": 10,
+   "text": "to trigger movements or reactivate memories.",
+   "start": 66.161,
+   "end": 68.723
+  },
+  {
+   "i": 24,
+   "scene": 11,
+   "text": "This revolutionary neuroscience breakthrough only exists",
+   "start": 69.353,
+   "end": 72.525
+  },
+  {
+   "i": 25,
+   "scene": 11,
+   "text": "because we figured out how to hijack",
+   "start": 72.655,
+   "end": 74.349
+  },
+  {
+   "i": 26,
+   "scene": 11,
+   "text": "a microscopic algae's reflex for finding the sun.",
+   "start": 74.429,
+   "end": 77.121
+  }
+ ]
+};
