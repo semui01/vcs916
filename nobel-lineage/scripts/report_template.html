@@ -1,0 +1,497 @@
+<title>Nobel Physics Lineages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column (~68ch) that widens to full width for the
+   network and tables; sections are numbered because they follow the brief's
+   Step 8 output list. */
+:root {
+  --bg: #f4f6f8;
+  --surface: #fcfcfb;
+  --ink: #12161c;
+  --ink-2: #4a525e;
+  --ink-3: #7d8591;
+  --rule: #d9dde3;
+  --grid: #e6e9ed;
+  --accent: #1d4fa8;
+  --accent-soft: #e3ebf8;
+  --theory: #2a78d6;
+  --experiment: #eb6834;
+  --instrument: #1baf7a;
+  --doc: #12161c;
+  --strong: #4a6fae;
+  --spec: #9aa1ab;
+  --invert: #c0392b;
+  --external: #7d8591;
+  --font-display: "Literata", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1216; --surface: #171b21; --ink: #eef1f5; --ink-2: #b4bcc7; --ink-3: #848d99;
+    --rule: #2b323b; --grid: #222830; --accent: #8fb3f0; --accent-soft: #1d2a40;
+    --theory: #3987e5; --experiment: #d95926; --instrument: #199e70;
+    --doc: #eef1f5; --strong: #8fa8d6; --spec: #6b7480; --invert: #e66767; --external: #848d99;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1216; --surface: #171b21; --ink: #eef1f5; --ink-2: #b4bcc7; --ink-3: #848d99;
+  --rule: #2b323b; --grid: #222830; --accent: #8fb3f0; --accent-soft: #1d2a40;
+  --theory: #3987e5; --experiment: #d95926; --instrument: #199e70;
+  --doc: #eef1f5; --strong: #8fa8d6; --spec: #6b7480; --invert: #e66767; --external: #848d99;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--font-body); margin: 0; }
+.page { max-width: 1180px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); padding-block: 40px 80px; }
+.prose { max-width: 68ch; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 650; text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 46px); letter-spacing: -0.01em; }
+h2 { font-size: 26px; display: flex; gap: 12px; align-items: baseline; }
+h2 .num { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-weight: 500; letter-spacing: 0.04em; }
+h3 { font-size: 18px; font-weight: 500; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.eyebrow { font: 500 12px/1 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.lede { font-size: 17px; color: var(--ink-2); }
+header.top { display: grid; gap: 16px; padding-bottom: 28px; border-bottom: 1px solid var(--rule); }
+section { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; padding-block: 40px; border-bottom: 1px solid var(--rule); }
+section > .prose { display: grid; gap: 12px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+.stat { background: var(--surface); padding: 14px 16px; display: grid; gap: 4px; min-width: 0; }
+.stat b { font: 600 24px/1.1 var(--font-body); }
+.stat span { font-size: 13px; color: var(--ink-2); }
+.callout { background: var(--accent-soft); padding: 14px 16px; border-radius: 4px; color: var(--ink); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--rule); background: var(--surface); border-radius: 4px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { font: 500 11.5px/1.3 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); background: var(--surface); position: sticky; top: 0; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.mono { font-family: var(--font-mono); font-size: 12.5px; }
+.chip { display: inline-block; font: 500 12px/1 var(--font-mono); padding: 4px 6px; border-radius: 3px; background: var(--bg); border: 1px solid var(--rule); white-space: nowrap; }
+.chip.ext { border-style: dashed; color: var(--ink-3); }
+.arrow { color: var(--ink-3); padding-inline: 2px; }
+.conf { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-size: 12.5px; }
+.conf i { display: inline-block; width: 22px; height: 0; border-top: 2px solid var(--doc); }
+.conf.M i { border-top: 2px dashed var(--strong); }
+.conf.L i { border-top: 2px dotted var(--spec); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 13.5px; }
+.controls label { display: inline-flex; flex-wrap: wrap; max-width: 100%; gap: 6px; align-items: center; color: var(--ink-2); }
+select, input[type="search"] { min-width: 0; font: inherit; font-size: 13.5px; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 5px 8px; max-width: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12.5px; color: var(--ink-2); align-items: center; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: -1px; margin-right: 6px; }
+.dot.T { background: var(--theory); } .dot.E { background: var(--experiment); } .dot.I { background: var(--instrument); }
+.dot.X { background: transparent; border: 1.5px dashed var(--external); }
+svg text { fill: var(--ink-2); font-family: var(--font-body); }
+svg .lane-label { font: 600 11px var(--font-mono); letter-spacing: 0.04em; fill: var(--ink-3); text-transform: uppercase; }
+svg .tick { font: 11px var(--font-mono); fill: var(--ink-3); }
+svg .gridline { stroke: var(--grid); stroke-width: 1; }
+svg .lane-rule { stroke: var(--rule); stroke-width: 1; }
+svg .edge { fill: none; stroke-width: 1.4; opacity: 0.55; }
+svg .edge.H { stroke: var(--doc); }
+svg .edge.M { stroke: var(--strong); stroke-dasharray: 5 3; }
+svg .edge.L { stroke: var(--spec); stroke-dasharray: 1.5 3; }
+svg .edge.PD { stroke: var(--spec); stroke-dasharray: 8 4; }
+svg .edge.inv { stroke: var(--invert); }
+svg .edge-hit { fill: none; stroke: transparent; stroke-width: 10; cursor: pointer; }
+svg .node circle { stroke: var(--surface); stroke-width: 2; cursor: pointer; }
+svg .node.T circle { fill: var(--theory); } svg .node.E circle { fill: var(--experiment); } svg .node.I circle { fill: var(--instrument); }
+svg .node.X circle { fill: var(--surface); stroke: var(--external); stroke-dasharray: 2 2; stroke-width: 1.5; }
+svg .node text { font: 500 10.5px var(--font-mono); fill: var(--ink-2); pointer-events: none; }
+svg.focus .edge, svg.focus .node { opacity: 0.12; }
+svg.focus .edge.on { opacity: 0.95; stroke-width: 2; }
+svg.focus .node.on { opacity: 1; }
+svg .node.sel circle { stroke: var(--ink); stroke-width: 2.5; }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px; display: grid; gap: 8px; min-height: 92px; font-size: 14px; }
+.panel .muted, .muted { color: var(--ink-3); }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.two > * { min-width: 0; }
+.tl { display: grid; gap: 6px; align-content: start; }
+#tl { grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); }
+.tl svg { width: 100%; height: auto; display: block; }
+ol.findings { display: grid; gap: 14px; padding-left: 22px; margin: 0; max-width: 76ch; }
+ol.findings li::marker { font-family: var(--font-mono); color: var(--accent); }
+ol.findings b { font-weight: 600; }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 76ch; }
+.verdict { font: 500 12px/1 var(--font-mono); padding: 4px 6px; border-radius: 3px; white-space: nowrap; border: 1px solid currentColor; }
+.verdict.H { color: var(--ink); } .verdict.M { color: var(--strong); } .verdict.L { color: var(--spec); } .verdict.none { color: var(--invert); }
+.src a { word-break: break-all; }
+.tick-ok { color: var(--instrument); font-weight: 600; }
+footer { padding-top: 28px; font-size: 13px; color: var(--ink-3); display: grid; gap: 8px; max-width: 80ch; }
+@media (prefers-reduced-motion: no-preference) { svg .edge, svg .node { transition: opacity 0.15s; } }
+</style>
+
+<div class="page">
+<header class="top">
+  <span class="eyebrow">Nobel Prize in Physics · 1901–2026 · <span data-k="counts.prize_years"></span> prize years</span>
+  <h1>Nobel Physics Lineages</h1>
+  <p class="lede prose">Which Physics prizes rest on earlier Physics prizes, how strong each link is, and how long the chains run. Every link below is sourced and graded. This is a Nobel-visible lineage: it shows only the part of scientific influence that passed through Nobel-recognised work.</p>
+  <div class="stats" id="stats"></div>
+  <p class="callout prose"><b>Read this first.</b> nobelprize.org and its API were blocked by the build environment's network policy. Motivations and Nobel document links were therefore written from the Nobel record without being re-downloaded. Links marked <span class="tick-ok">✓</span> were re-checked by web search on 6 October 2026, the day the 2026 prize went to Francis Halzen. The rest cite standard Nobel or primary sources and should be spot-checked before quoting. The repository includes a script that diffs every motivation against the official API.</p>
+</header>
+
+<section id="ranked">
+  <h2><span class="num">01</span>Strongest lineages, ranked</h2>
+  <div class="prose">
+    <p>Each lineage is a group of prizes on one subject. Its <b>spine</b> is the best-evidenced chain inside it, found by the script rather than chosen by hand. Score = 1 per documented link + 0.5 per strong-inference link. Speculative links and parallel developments never count. Generations = Nobel-cited contributions on the spine.</p>
+  </div>
+  <div class="scroll"><table id="lineage-table"></table></div>
+</section>
+
+<section id="network">
+  <h2><span class="num">02</span>The network</h2>
+  <div class="prose"><p>Each dot is one prize citation, placed on its field's lane. Select a dot to trace everything upstream and downstream of it; select a line to read its evidence. Switch the x-axis to award year to see links that run backwards: the later discovery was honoured first.</p></div>
+  <div class="controls">
+    <label for="xmode">X-axis <select id="xmode"><option value="work">Year of the recognised work</option><option value="award">Award year</option></select></label>
+    <label for="minconf">Show <select id="minconf"><option value="H">Documented only</option><option value="M" selected>Documented + strong inference</option><option value="L">All, incl. speculative</option></select></label>
+    <label for="showpd"><input type="checkbox" id="showpd"> Parallel developments</label>
+    <label for="lineage-pick">Highlight <select id="lineage-pick"><option value="">No lineage</option></select></label>
+  </div>
+  <div class="legend">
+    <span><i class="dot T"></i>Theory</span><span><i class="dot E"></i>Experimental discovery</span><span><i class="dot I"></i>Instrument or method</span><span><i class="dot X"></i>Laureate's work the Nobel citation did not cover</span>
+    <span class="conf H"><i></i>Documented</span><span class="conf M"><i></i>Strong inference</span><span class="conf L"><i></i>Speculative</span>
+    <span id="inv-legend" hidden><span class="conf"><i style="border-top-color:var(--invert)"></i>Award order inverted</span></span>
+  </div>
+  <div class="scroll"><svg id="net" role="img" aria-label="Network of Nobel Physics prizes connected by documented and inferred scientific dependencies"></svg></div>
+  <div class="panel" id="panel" aria-live="polite"><span class="muted">Select a prize or a link. Tip: try Englert and Higgs (2013), Halzen (2026) or Clarke, Devoret and Martinis (2025).</span></div>
+</section>
+
+<section id="timelines">
+  <h2><span class="num">03</span>Timelines of the top five lineages</h2>
+  <div class="prose"><p>Each row is one generation on the spine. The hollow dot marks when the work was done; the filled dot marks the award. The line between them is the wait for recognition. Labels between rows give the link type and grade. A backwards award arrow means that generation was honoured before its scientific parent.</p></div>
+  <div class="legend"><span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="var(--accent)" stroke-width="2"/></svg> Work published</span><span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--accent)"/></svg> Nobel award</span></div>
+  <div id="tl" class="two"></div>
+</section>
+
+<section id="neutrino">
+  <h2><span class="num">04</span>Worked example: the neutrino lineage</h2>
+  <div class="prose">
+    <p>The proposed chain was Pauli → Reines → Lederman/Schwartz/Steinberger → Davis/Koshiba → Kajita/McDonald → Halzen/IceCube. Of those five arrows, two are documented and one is a strong inference. The other two are weak. The chain also starts outside the Nobel record: Pauli's prize was for the exclusion principle, not the neutrino.</p>
+  </div>
+  <div class="scroll"><table id="nu-table"></table></div>
+  <h3>What the evidence actually supports</h3>
+  <div class="prose"><p>Drawn with the same grading as the network. The 2026 prize has four direct Nobel parents (seven laureates). The strongest input is not the chain's previous step but Cherenkov's 1958 effect, which every water and ice detector in the lineage uses.</p></div>
+  <div class="scroll"><svg id="nu-graph" role="img" aria-label="Neutrino lineage graph"></svg></div>
+  <div class="stats" id="nu-stats"></div>
+</section>
+
+<section id="spans">
+  <h2><span class="num">05</span>Longest time spans</h2>
+  <div class="two">
+    <div class="tl"><h3>Longest single links</h3><div class="scroll"><table id="long-links"></table></div></div>
+    <div class="tl"><h3>Longest chains</h3><div class="scroll"><table id="long-chains"></table></div></div>
+  </div>
+  <div class="two">
+    <div class="tl"><h3>Longest waits for the prize</h3><div class="scroll"><table id="long-lags"></table></div></div>
+    <div class="tl"><h3>Time between linked contributions</h3><div class="scroll"><table id="timing"></table></div>
+      <p class="muted" style="font-size:13px">Work gap = years between the two pieces of recognised work. Award gap = years between the two prizes. Directed links rated documented or strong inference.</p></div>
+  </div>
+</section>
+
+<section id="density">
+  <h2><span class="num">06</span>Most densely connected areas</h2>
+  <div class="prose"><p>Links per prize counts every documented or strong-inference link touching a field's prizes. Density is the share of possible within-field pairs that are linked. Small fields score high on density by construction, so read the two columns together.</p></div>
+  <div class="scroll"><table id="fields"></table></div>
+  <div class="two">
+    <div class="tl"><h3>Most-reused prizes (outgoing links)</h3><div class="scroll"><table id="outdeg"></table></div></div>
+    <div class="tl"><h3>Most laureates behind one discovery</h3><div class="scroll"><table id="ancestors"></table></div></div>
+  </div>
+</section>
+
+<section id="findings">
+  <h2><span class="num">07</span>Unexpected findings</h2>
+  <ol class="findings">
+    <li><b>The longest fully documented chain starts in a low-temperature lab and ends in the Standard Model.</b> van der Waals (1910) → Kamerlingh Onnes (1913) → BCS (1972) → Nambu (2008) → Englert & Higgs (2013) → Glashow, Salam & Weinberg (1979) → Rubbia & van der Meer (1984). That is seven prizes, every link documented. Nambu built spontaneous symmetry breaking by analogy with BCS superconductivity, and the Higgs mechanism generalises it.</li>
+    <li><b>Prize order often runs against scientific order.</b> 14 of 150 graded links point from a later award to an earlier one. Englert and Higgs were honoured 34 years after the electroweak theory that used their mechanism. Ashkin was honoured 21 years after the laser-cooling prize his trapping work helped start. Landau was honoured 16 years before Kapitsa, whose discovery he explained. Reines was honoured 7 years after the muon-neutrino experiment that followed his detection.</li>
+    <li><b>The neutrino lineage's roots are not in the Nobel record.</b> Pauli's neutrino and Fermi's beta-decay theory were never cited. Cowan, Pontecorvo (who proposed both the chlorine detector and oscillations) and Bahcall never received the prize. In the Nobel-visible record the 2002 prize descends from Bethe's stellar fusion theory and Cherenkov's detector physics, not from the 1988 prize.</li>
+    <li><b>The laser is the most reused Physics prize.</b> The 1964 maser–laser prize feeds 9 later prizes: laser spectroscopy, laser cooling, optical tweezers, attosecond pulses, quantum optics theory, fibre optics, entanglement experiments, LIGO and the CMB receiver. BCS theory (6) and the Cherenkov effect (4) come next.</li>
+    <li><b>Relativity has no Nobel root.</b> Einstein's relativity was never cited, so the gravitational lineage becomes visible only with the binary pulsar (1993), LIGO (2017) and Penrose (2020).</li>
+    <li><b>A quantum rule ends up measuring the universe.</b> Pauli's exclusion principle (1945) → Chandrasekhar's white-dwarf mass limit (1983) → Type Ia supernovae as standard candles → the accelerating universe (2011), with CCD sensors (2009) as the instrument.</li>
+    <li><b>Spin glasses lead to machine learning.</b> Anderson's disordered magnets (1977) → Parisi (2021) → Hopfield & Hinton (2024). The Hopfield network's energy function is a spin-glass Hamiltonian.</li>
+    <li><b>The wait for a prize has roughly tripled.</b> The median gap from work to award was 10 years for prizes given 1901–1925 and 34 years for 2001–2026. Theory waits longest (median 27 years, against 11 for experimental discoveries).</li>
+    <li><b>Explaining is fast, confirming is slow.</b> When a discovery came first, the Nobel-recognised explanation followed in a median 4 years. When a prediction came first, the Nobel-recognised confirmation took a median 18 years.</li>
+    <li><b>About 1 prize in 10 stands alone.</b> 15 of 146 contributions have no Nobel-visible link at all. Examples are Dalén's lighthouse regulators, Guillaume's alloys, Mössbauer, Zernike's phase contrast, Giacconi's X-ray astronomy and the 2021 climate prize. Some of these have rich ancestry outside Physics prizes.</li>
+  </ol>
+</section>
+
+<section id="limits">
+  <h2><span class="num">08</span>Limitations and possible biases</h2>
+  <ul class="plain">
+    <li><b>Nobel-visible, not complete.</b> Nobel prizes are selective: at most three laureates per prize, no posthumous awards since 1974, and many decisive contributors are missing. Examples are Cowan, Pontecorvo, Bahcall, Bose, Meitner, Wu, Bell, Hertz, Boltzmann, Brout, Kibble, Gamow and Alpher. A missing arrow means "not visible through prizes", not "no influence".</li>
+    <li><b>Curator bias.</b> One analyst chose the links. Fields the brief singled out, such as neutrinos, were searched harder. That inflates their density: cosmic rays & neutrinos scores highest partly because it was examined most closely.</li>
+    <li><b>Medium links chain into long paths.</b> Allowing strong-inference "ancestry" links produces an 11-generation path from Röntgen to the 2015 prize that zig-zags through particle physics. It is reported but not ranked. Rankings use spines inside subject groups, and the headline chain uses documented links only.</li>
+    <li><b>Work years are approximate.</b> Shared prizes cite work spread over years. The 2003 and 2016 citations were split by laureate because their work spans decades, and each still counts as one prize.</li>
+    <li><b>Source access.</b> 22 of 165 links were re-checked by web search in this session. The rest cite Nobel documents or primary sources from prior knowledge. The Nobel scientific backgrounds for 2025 and 2026 were located but could not be read in full.</li>
+    <li><b>Physics only.</b> Links through Chemistry prizes (Rutherford, the Joliot-Curies, Hahn, McMillan) and Medicine (MRI) are invisible here. This breaks the radioactivity chain in particular.</li>
+    <li><b>Award inversions complicate "generations".</b> Generation counts follow the order of the work, not of the awards.</li>
+  </ul>
+</section>
+
+<section id="evidence">
+  <h2><span class="num">09</span>Every link and its evidence</h2>
+  <div class="controls">
+    <label for="ev-q">Filter <input type="search" id="ev-q" placeholder="year, name or word"></label>
+    <label for="ev-c">Grade <select id="ev-c"><option value="">All</option><option value="H">Documented</option><option value="M">Strong inference</option><option value="L">Speculative</option></select></label>
+    <span class="muted" id="ev-count"></span>
+  </div>
+  <div class="scroll" style="max-height:640px"><table id="ev-table"></table></div>
+</section>
+
+<footer>
+  <p>Method: 146 prize contributions (120 prize years, <span data-k="counts.laureate_awards"></span> laureate awards) and 165 graded links. Statistics come from <span class="mono">nobel-lineage/scripts/analyze.py</span>. Relationship types follow the brief: theoretical foundation, experimental confirmation, instrumental/technological foundation, new application or extension, direct discovery follow-up, independent parallel development.</p>
+  <p>Sources: Nobel Foundation material at nobelprize.org (motivations, ceremony speeches, scientific backgrounds), the 2015, 2025 and 2026 scientific backgrounds, Rajasekaran, <i>The Story of the Neutrino</i> (arXiv:1606.08715), and others cited per link.</p>
+</footer>
+</div>
+
+<script id="data" type="application/json">/*DATA*/</script>
+<script>
+(() => {
+const D = JSON.parse(document.getElementById('data').textContent);
+const N = Object.fromEntries(D.nodes.map(n => [n.id, n]));
+const E = D.edges;
+const W = { H: 1, M: 0.5, L: 0.1 };
+const CONF = { H: 'Documented', M: 'Strong inference', L: 'Speculative' };
+const LANES = ['quantum', 'xray', 'nuclear', 'particle', 'astroparticle', 'astro', 'amo', 'condensed', 'statistical', 'other'];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const surname = n => { const l = n.laureates; const last = x => { const t = x.replace(/\(.*\)/, '').replace(/,? (Jr|Sr)\.$/, '').trim().split(' '); let i = t.length - 1; while (i > 1 && /^(van|der|de|von|'t|Kamerlingh)$/.test(t[i - 1])) i--; return t.slice(i).join(' '); }; return l.length > 2 ? last(l[0]) + ' et al.' : l.map(last).join(' & '); };
+const label = id => N[id].nobel ? `${N[id].year} ${surname(N[id])}` : `${surname(N[id])} ${N[id].work_year} (not cited)`;
+const chip = id => `<span class="chip${N[id].nobel ? '' : ' ext'}" title="${esc(N[id].laureates.join(', '))}">${esc(label(id))}</span>`;
+const conf = c => `<span class="conf ${c}"><i></i>${CONF[c]}</span>`;
+const get = (o, p) => p.split('.').reduce((a, k) => a && a[k], o);
+document.querySelectorAll('[data-k]').forEach(el => el.textContent = get(D, el.dataset.k));
+const svgEl = (tag, attrs = {}) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+// ------------------------------------------------ headline stats
+const c = D.counts;
+const hBest = D.longest_paths_H[1] || D.longest_paths_H[0];
+document.getElementById('stats').innerHTML = [
+  [c.nodes, 'prize contributions, 1901–2026'],
+  [c.edges_total, `graded links: ${c.edges_by_conf.H} documented, ${c.edges_by_conf.M} inferred, ${c.edges_by_conf.L} speculative`],
+  [Math.round(c.connected_share * 100) + '%', 'of prizes have at least one Nobel-visible link'],
+  [hBest.generations + ' prizes', `longest fully documented chain (${hBest.first_award}–${hBest.last_award} awards)`],
+  [D.timing.work_gap_all.median + ' yrs', 'median gap between linked pieces of work'],
+  [D.timing.award_inversions.length, 'links where the later discovery was honoured first'],
+].map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
+
+// ------------------------------------------------ ranked lineages
+const lt = document.getElementById('lineage-table');
+lt.innerHTML = `<thead><tr><th class="n">#</th><th>Lineage and spine</th><th class="n">Gen.</th><th class="n">Score</th><th>Weakest link</th><th class="n">Work span</th><th class="n">Award span</th><th class="n">Between</th><th class="n">Inverted</th><th class="n">Mean gap (work / award)</th></tr></thead><tbody>` +
+  D.lineages.map(r => { const s = r.spine; return `<tr><td class="n">${r.rank}</td><td style="min-width:340px"><b>${esc(r.name)}</b><div style="margin-top:6px;line-height:2">${s.nodes.map(chip).join('<span class="arrow">→</span>')}</div><div class="muted" style="font-size:12.5px">${r.member_prizes} prizes and ${r.member_laureates} laureates in the group</div></td><td class="n">${s.generations}</td><td class="n">${s.score}</td><td>${conf(s.weakest_link)}</td><td class="n">${s.first_work}–${s.last_work}<br><span class="muted">${s.work_span} yrs</span></td><td class="n">${s.first_award}–${s.last_award}<br><span class="muted">${s.award_span} yrs</span></td><td class="n">${s.intermediate_prizes}</td><td class="n">${s.award_inversions}</td><td class="n">${s.mean_work_gap} / ${s.mean_award_gap}</td></tr>`; }).join('') + '</tbody>';
+const pick = document.getElementById('lineage-pick');
+D.lineages.forEach(r => pick.insertAdjacentHTML('beforeend', `<option value="${r.id}">${esc(r.name)}</option>`));
+
+// ------------------------------------------------ generic graph drawing
+function drawGraph(svg, opts) {
+  const { nodes, edges, xOf, yOf, width, height, onNode, onEdge, ticks, lanes, mode } = opts;
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.setAttribute('width', width); svg.setAttribute('height', height);
+  const defs = svgEl('defs');
+  [['H', 'var(--doc)'], ['M', 'var(--strong)'], ['L', 'var(--spec)'], ['inv', 'var(--invert)']].forEach(([k, col]) => {
+    const m = svgEl('marker', { id: svg.id + '-a-' + k, viewBox: '0 0 8 8', refX: 7.5, refY: 4, markerWidth: 6, markerHeight: 6, orient: 'auto-start-reverse' });
+    m.appendChild(svgEl('path', { d: 'M0,0 L8,4 L0,8 z', fill: col })); defs.appendChild(m);
+  });
+  svg.appendChild(defs);
+  const g0 = svgEl('g'); svg.appendChild(g0);
+  (ticks || []).forEach(t => { g0.appendChild(svgEl('line', { x1: t.x, x2: t.x, y1: 24, y2: height - 8, class: 'gridline' })); const tx = svgEl('text', { x: t.x, y: 16, 'text-anchor': 'middle', class: 'tick' }); tx.textContent = t.label; g0.appendChild(tx); });
+  (lanes || []).forEach(l => { g0.appendChild(svgEl('line', { x1: 0, x2: width, y1: l.y0, y2: l.y0, class: 'lane-rule' })); const tx = svgEl('text', { x: 8, y: l.y0 + 14, class: 'lane-label' }); tx.textContent = l.label; g0.appendChild(tx); });
+  const ge = svgEl('g'), gn = svgEl('g'); svg.appendChild(ge); svg.appendChild(gn);
+  const edgeEls = [], nodeEls = {};
+  edges.forEach(e => {
+    const x1 = xOf(e.source), y1 = yOf(e.source), x2 = xOf(e.target), y2 = yOf(e.target);
+    const inv = mode === 'award' && e.award_gap !== null && e.award_gap < 0;
+    const dx = Math.max(24, Math.abs(x2 - x1) * 0.45) * (x2 >= x1 ? 1 : -1);
+    const d = `M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2 - (x2 >= x1 ? 7 : -7)},${y2}`;
+    const cls = 'edge ' + (e.type === 'PD' ? 'PD' : e.confidence) + (inv ? ' inv' : '');
+    const p = svgEl('path', { d, class: cls, 'marker-end': e.type === 'PD' ? '' : `url(#${svg.id}-a-${inv ? 'inv' : e.confidence})` });
+    const hit = svgEl('path', { d, class: 'edge-hit' });
+    const t = svgEl('title'); t.textContent = `${label(e.source)} → ${label(e.target)}: ${e.type_label} (${CONF[e.confidence]})`; hit.appendChild(t);
+    if (onEdge) hit.addEventListener('click', () => onEdge(e));
+    ge.appendChild(p); ge.appendChild(hit); edgeEls.push({ e, el: p });
+  });
+  nodes.forEach(id => {
+    const n = N[id];
+    const g = svgEl('g', { class: 'node ' + (n.nobel ? n.kind : 'X'), tabindex: 0, role: 'button', 'aria-label': label(id) });
+    g.appendChild(svgEl('circle', { cx: xOf(id), cy: yOf(id), r: n.nobel ? 5.5 : 5 }));
+    const tx = svgEl('text', opts.short ? { x: xOf(id) + 8, y: yOf(id) + 3.5 } : { x: xOf(id), y: yOf(id) - 8, 'text-anchor': 'middle' }); tx.textContent = n.nobel ? (opts.short ? label(id) : n.id.replace(/[ab]$/, '')) : surname(n) + ' ' + n.work_year; g.appendChild(tx);
+    const t = svgEl('title'); t.textContent = `${label(id)}: ${n.laureates.join(', ')}`; g.appendChild(t);
+    if (onNode) { g.addEventListener('click', () => onNode(id)); g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); onNode(id); } }); }
+    gn.appendChild(g); nodeEls[id] = g;
+  });
+  return { edgeEls, nodeEls };
+}
+
+// ------------------------------------------------ main network
+const net = document.getElementById('net'), panel = document.getElementById('panel');
+const st = { xmode: 'work', minconf: 'M', pd: false, lineage: '', sel: null };
+let drawn;
+function visibleEdges() {
+  const ok = { H: ['H'], M: ['H', 'M'], L: ['H', 'M', 'L'] }[st.minconf];
+  return E.filter(e => ok.includes(e.confidence) && (e.type !== 'PD' || st.pd));
+}
+function renderNet() {
+  const nodes = D.nodes.map(n => n.id);
+  const xv = id => st.xmode === 'work' || !N[id].nobel ? N[id].work_year : N[id].year;
+  const lo = st.xmode === 'work' ? 1870 : 1895, hi = 2030, left = 150, W_ = 1500;
+  const xs = v => left + (v - lo) / (hi - lo) * (W_ - left - 60);
+  const rows = {}; let y = 30; const lanes = [];
+  LANES.forEach(f => {
+    const ids = nodes.filter(id => N[id].field === f).sort((a, b) => xv(a) - xv(b));
+    const lastX = [];
+    ids.forEach(id => { const x = xs(xv(id)); let r = lastX.findIndex(lx => x - lx > 34); if (r < 0) { r = lastX.length; lastX.push(x); } else lastX[r] = x; rows[id] = r; });
+    const h = Math.max(1, lastX.length) * 24 + 26;
+    lanes.push({ f, y0: y, label: D.field_labels[f].split(' (')[0] });
+    ids.forEach(id => rows[id] = y + 38 + rows[id] * 24);
+    y += h;
+  });
+  const ticks = []; for (let t = Math.ceil(lo / 10) * 10; t <= hi; t += 10) ticks.push({ x: xs(t), label: t });
+  drawn = drawGraph(net, { nodes, edges: visibleEdges(), xOf: id => xs(xv(id)), yOf: id => rows[id], width: W_, height: y + 8, ticks, lanes, mode: st.xmode, onNode: selectNode, onEdge: showEdge });
+  document.getElementById('inv-legend').hidden = st.xmode !== 'award';
+  applyFocus();
+}
+function closure(id, dir, edges) {
+  const seen = new Set([id]), stack = [id];
+  while (stack.length) { const v = stack.pop(); edges.forEach(e => { if (e.type === 'PD') return; const [a, b] = dir === 'up' ? [e.target, e.source] : [e.source, e.target]; if (a === v && !seen.has(b)) { seen.add(b); stack.push(b); } }); }
+  return seen;
+}
+function applyFocus() {
+  Object.values(drawn.nodeEls).forEach(el => el.classList.remove('on', 'sel'));
+  drawn.edgeEls.forEach(({ el }) => el.classList.remove('on'));
+  let on = null;
+  if (st.sel) {
+    const ve = visibleEdges(); const up = closure(st.sel, 'up', ve), down = closure(st.sel, 'down', ve);
+    on = new Set([...up, ...down]);
+    drawn.edgeEls.forEach(({ e, el }) => { if ((up.has(e.source) && up.has(e.target)) || (down.has(e.source) && down.has(e.target))) el.classList.add('on'); });
+    drawn.nodeEls[st.sel] && drawn.nodeEls[st.sel].classList.add('sel');
+  } else if (st.lineage) {
+    const L = D.lineages.find(l => l.id === st.lineage); on = new Set(L.members);
+    drawn.edgeEls.forEach(({ e, el }) => { if (on.has(e.source) && on.has(e.target)) el.classList.add('on'); });
+  }
+  net.classList.toggle('focus', !!on);
+  if (on) on.forEach(id => drawn.nodeEls[id] && drawn.nodeEls[id].classList.add('on'));
+}
+function selectNode(id) {
+  st.sel = st.sel === id ? null : id; applyFocus();
+  if (!st.sel) { panel.innerHTML = '<span class="muted">Selection cleared.</span>'; return; }
+  const n = N[id], ve = visibleEdges();
+  const parents = ve.filter(e => e.target === id), kids = ve.filter(e => e.source === id);
+  const up = closure(id, 'up', ve); up.delete(id);
+  const upL = new Set([...up].filter(u => N[u].nobel).flatMap(u => N[u].laureates));
+  const li = e => `<li>${chip(e.source === id ? e.target : e.source)} ${esc(e.type_label)} · ${conf(e.confidence)}</li>`;
+  panel.innerHTML = `<div><span class="eyebrow">${n.nobel ? 'Nobel ' + n.year : 'Not cited by Nobel'} · ${esc(D.field_labels[n.field])}</span></div>
+    <h3>${esc(n.laureates.join(', '))}</h3><p>“${esc(n.motivation)}”</p>
+    <p class="muted">Key work ${n.work_year}${n.nobel ? ` · recognised ${n.year - n.work_year} years later` : ''} · ${up.size} upstream contributions (${upL.size} laureates) at the current grade.</p>
+    <div class="two"><div><b>Builds on</b><ul class="plain">${parents.map(li).join('') || '<li class="muted">No Nobel-visible parent</li>'}</ul></div>
+    <div><b>Feeds into</b><ul class="plain">${kids.map(li).join('') || '<li class="muted">No Nobel-visible descendant</li>'}</ul></div></div>`;
+}
+function showEdge(e) {
+  panel.innerHTML = `<div><span class="eyebrow">${esc(e.type_label)} · ${e.scope === 'direct' ? 'direct dependency' : 'broader ancestry'}</span></div>
+    <h3>${chip(e.source)} <span class="arrow">→</span> ${chip(e.target)}</h3><p>${esc(e.claim)}</p>
+    <p>${conf(e.confidence)} · work gap ${e.work_gap} yrs${e.award_gap !== null ? ` · award gap ${e.award_gap} yrs` : ''}</p>
+    <p class="src">${e.sources.map(s => `<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s.replace('https://', ''))}</a>`).join('<br>')}${e.verified_in_session ? ' <span class="tick-ok">✓ re-checked</span>' : ''}</p>`;
+}
+document.getElementById('xmode').addEventListener('change', ev => { st.xmode = ev.target.value; renderNet(); });
+document.getElementById('minconf').addEventListener('change', ev => { st.minconf = ev.target.value; renderNet(); });
+document.getElementById('showpd').addEventListener('change', ev => { st.pd = ev.target.checked; renderNet(); });
+pick.addEventListener('change', ev => { st.lineage = ev.target.value; st.sel = null; applyFocus(); });
+renderNet();
+
+// ------------------------------------------------ timelines (top 5)
+const tl = document.getElementById('tl');
+D.lineages.slice(0, 5).forEach(L => {
+  const s = L.spine, ids = s.nodes;
+  const lo = Math.floor((s.first_work - 4) / 10) * 10, hi = Math.ceil((s.last_award + 4) / 10) * 10;
+  const Wd = 560, left = 16, right = 40, rowH = 50, top = 30;
+  const x = v => left + (v - lo) / (hi - lo) * (Wd - left - right);
+  const H_ = top + ids.length * rowH + 6;
+  const svg = svgEl('svg', { viewBox: `0 0 ${Wd} ${H_}`, role: 'img', 'aria-label': `Timeline: ${L.name}` });
+  for (let t = lo; t <= hi; t += (hi - lo > 80 ? 20 : 10)) { svg.appendChild(svgEl('line', { x1: x(t), x2: x(t), y1: 20, y2: H_ - 4, class: 'gridline' })); const tx = svgEl('text', { x: x(t), y: 13, 'text-anchor': 'middle', class: 'tick' }); tx.textContent = t; svg.appendChild(tx); }
+  ids.forEach((id, i) => {
+    const n = N[id], y = top + i * rowH + 26;
+    const t = svgEl('text', { x: left, y: y - 12, style: 'font:500 12px var(--font-body);fill:var(--ink)' }); t.textContent = `${n.year} · ${n.laureates.length > 2 ? n.laureates[0] + ' et al.' : n.laureates.join(' & ')}`; svg.appendChild(t);
+    svg.appendChild(svgEl('line', { x1: x(n.work_year), x2: x(n.year), y1: y, y2: y, stroke: 'var(--accent)', 'stroke-width': 2 }));
+    svg.appendChild(svgEl('circle', { cx: x(n.work_year), cy: y, r: 5, fill: 'var(--surface)', stroke: 'var(--accent)', 'stroke-width': 2 }));
+    svg.appendChild(svgEl('circle', { cx: x(n.year), cy: y, r: 5, fill: 'var(--accent)' }));
+    const lagT = svgEl('text', { x: x(n.year) + 9, y: y + 4, class: 'tick' }); lagT.textContent = `+${n.year - n.work_year}`; svg.appendChild(lagT);
+    if (i > 0) {
+      const e = E.find(e => e.source === ids[i - 1] && e.target === id);
+      const lt_ = svgEl('text', { x: Wd - right, y: y - 12, 'text-anchor': 'end', class: 'tick' }); lt_.textContent = `${e.type}·${e.confidence}${e.award_gap < 0 ? ' · award ↶' : ''}`; svg.appendChild(lt_);
+    }
+  });
+  const box = document.createElement('div'); box.className = 'tl';
+  box.innerHTML = `<h3>${L.rank}. ${esc(L.name)}</h3><p class="muted" style="font-size:13px">${s.generations} generations · work ${s.first_work}–${s.last_work} · awards ${s.first_award}–${s.last_award} · ${s.award_inversions} inverted</p>`;
+  const sc = document.createElement('div'); sc.className = 'scroll'; sc.style.padding = '6px'; sc.appendChild(svg); box.appendChild(sc); tl.appendChild(box);
+});
+tl.insertAdjacentHTML('beforeend', `<div class="tl"><h3>Codes</h3><p class="muted" style="font-size:13.5px">TF theoretical foundation · EC experimental confirmation · IT instrumental/technological foundation · AE new application or extension · DF direct discovery follow-up. H documented · M strong inference. “award ↶” marks a generation honoured before its parent. +N is the years from work to award.</p></div>`);
+
+// ------------------------------------------------ neutrino worked example
+const proposed = [['X-Pauli1930', '1995b'], ['1995b', '1988'], ['1988', '2002a'], ['2002a', '2015'], ['2015', '2026']];
+const notes = {
+  'X-Pauli1930>1995b': 'Real and direct, but outside the Nobel-visible graph: Pauli’s 1945 prize was for the exclusion principle.',
+  '1995b>1988': 'Direct follow-up in the order of the science (1956 → 1962), yet the prizes came in reverse order (1988 before 1995).',
+  '1988>2002a': 'No material dependency found. The chain is chronological here, not causal.',
+  '2002a>2015': 'The strongest arrow in the chain: same detector line (Kamiokande → Super-K) and the solar deficit SNO resolved.',
+  '2015>2026': 'IceCube measures oscillations and flavour ratios, but its discovery of astrophysical neutrinos did not depend on them.',
+};
+document.getElementById('nu-table').innerHTML = `<thead><tr><th>Proposed arrow</th><th>Relationship</th><th>Grade</th><th>Scope</th><th class="n">Work gap</th><th class="n">Award gap</th><th>Assessment</th></tr></thead><tbody>` +
+  proposed.map(([a, b]) => { const e = E.find(e => e.source === a && e.target === b); return `<tr><td>${chip(a)}<span class="arrow">→</span>${chip(b)}</td><td>${esc(e.type_label)}</td><td><span class="verdict ${e.confidence}">${CONF[e.confidence]}</span></td><td>${e.scope}</td><td class="n">${e.work_gap}</td><td class="n">${e.award_gap === null ? '–' : e.award_gap}</td><td>${esc(notes[a + '>' + b])}</td></tr>`; }).join('') +
+  `<tr><td colspan="7" class="muted">Stronger arrows missing from the proposed chain: Bethe 1967 → Davis (documented), Cherenkov 1958 → Koshiba, Kajita/McDonald and Halzen (documented), Koshiba 2002 → Halzen (strong inference), Hess 1936 → Halzen (strong inference, cosmic-ray origin), Reines 1995 → Halzen via DUMAND (strong inference).</td></tr></tbody>`;
+const nuL = D.lineages.find(l => l.id === 'neutrino');
+const nuIds = nuL.members;
+const nuPos = { 'X-Pauli1930': [1930, 0], 'X-Fermi1934': [1934, 1], '1938': [1934, 2.6], '1936a': [1912, 6], '1958': [1934, 4], '1967': [1938, 5.2], '1950': [1947, 0.6], '1995b': [1956, 1.8], '1988': [1962, 0.4], '1995a': [1975, 0], '2002a': [1968, 3.6], '2015': [1998, 2.4], '2026': [2013, 4.6] };
+const nlo = 1905, nhi = 2025, nW = 1000;
+const nxs = v => 30 + (v - nlo) / (nhi - nlo) * (nW - 170);
+const nt = []; for (let t = 1910; t <= 2020; t += 10) nt.push({ x: nxs(t), label: t });
+drawGraph(document.getElementById('nu-graph'), { nodes: nuIds, edges: E.filter(e => nuIds.includes(e.source) && nuIds.includes(e.target)), xOf: id => nxs(nuPos[id][0]), yOf: id => 44 + nuPos[id][1] * 44, width: nW, height: 44 + 6 * 44 + 30, ticks: nt, mode: 'work', short: true, onEdge: e => { const p = document.getElementById('nu-panel'); p.innerHTML = `${chip(e.source)} → ${chip(e.target)} · ${conf(e.confidence)} · ${esc(e.claim)}`; } });
+document.getElementById('nu-graph').parentElement.insertAdjacentHTML('afterend', '<div class="panel" id="nu-panel" style="min-height:0"><span class="muted">Select a line to read its evidence. Horizontal position = year of the work.</span></div>');
+const n26 = D.most_direct_parents.find(r => r.id === '2026') || {};
+document.getElementById('nu-stats').innerHTML = [
+  ['96 yrs', 'Pauli’s hypothesis (1930) to Halzen’s prize (2026)'],
+  ['68 yrs', 'from the Cherenkov prize (1958), the strongest documented input, to 2026'],
+  ['5', 'Physics prizes cite neutrino work: 1988, 1995, 2002, 2015, 2026'],
+  [`${n26.direct_parents} / ${n26.direct_parent_laureates}`, 'direct Nobel parents / laureates behind the 2026 prize'],
+  ['9', 'laureates across those five neutrino prizes; Cowan, Pontecorvo and Bahcall are not among them'],
+].map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
+
+// ------------------------------------------------ spans & timing
+const dirE = E.filter(e => e.type !== 'PD' && e.confidence !== 'L');
+document.getElementById('long-links').innerHTML = `<thead><tr><th>Link</th><th class="n">Work gap</th><th class="n">Award gap</th><th>Grade</th></tr></thead><tbody>` +
+  [...dirE].sort((a, b) => b.work_gap - a.work_gap).slice(0, 8).map(e => `<tr><td>${chip(e.source)}<span class="arrow">→</span>${chip(e.target)}</td><td class="n">${e.work_gap}</td><td class="n">${e.award_gap ?? '–'}</td><td>${conf(e.confidence)}</td></tr>`).join('') + '</tbody>';
+const chains = [['Documented links only', D.longest_paths_H[1]], ['Direct links, incl. strong inference', D.longest_paths_M_direct[0]], ['Any graded link (not ranked; see limitations)', D.longest_paths_M[0]], ['Longest span among ranked lineages', D.lineages.map(l => l.spine).sort((a, b) => b.work_span - a.work_span)[0]]];
+document.getElementById('long-chains').innerHTML = `<thead><tr><th>Rule</th><th class="n">Gen.</th><th class="n">Work span</th><th class="n">Award span</th></tr></thead><tbody>` +
+  chains.map(([t, p]) => `<tr><td><b>${t}</b><div style="line-height:2">${p.nodes.map(chip).join('<span class="arrow">→</span>')}</div></td><td class="n">${p.generations}</td><td class="n">${p.first_work}–${p.last_work}<br><span class="muted">${p.work_span} yrs</span></td><td class="n">${p.first_award}–${p.last_award}<br><span class="muted">${p.award_span} yrs</span></td></tr>`).join('') + '</tbody>';
+document.getElementById('long-lags').innerHTML = `<thead><tr><th>Prize</th><th class="n">Work</th><th class="n">Award</th><th class="n">Wait</th></tr></thead><tbody>` +
+  D.nodes.filter(n => n.nobel).sort((a, b) => (b.year - b.work_year) - (a.year - a.work_year)).slice(0, 8).map(n => `<tr><td>${chip(n.id)}</td><td class="n">${n.work_year}</td><td class="n">${n.year}</td><td class="n">${n.year - n.work_year}</td></tr>`).join('') + '</tbody>';
+const T = D.timing, row = (t, s) => s ? `<tr><td>${t}</td><td class="n">${s.n}</td><td class="n">${s.mean}</td><td class="n">${s.median}</td><td class="n">${s.min}–${s.max}</td></tr>` : '';
+document.getElementById('timing').innerHTML = `<thead><tr><th>Measure (years)</th><th class="n">Links</th><th class="n">Mean</th><th class="n">Median</th><th class="n">Range</th></tr></thead><tbody>` +
+  row('Work gap, all linked contributions', T.work_gap_all) + row('Award gap, all linked prizes', T.award_gap_all) +
+  row('Theory → experimental confirmation (work)', T.theory_to_experiment) + row('Discovery → explaining theory (work)', T.experiment_to_theory) +
+  row('Technology → discovery made with it (work)', T.technology_to_discovery) +
+  row('Work → award, theory prizes', T.recognition_lag_by_kind.T) + row('Work → award, experimental prizes', T.recognition_lag_by_kind.E) + row('Work → award, instrument prizes', T.recognition_lag_by_kind.I) +
+  Object.entries(T.recognition_lag_by_decade).map(([k, v]) => row(`Work → award, prizes ${k.replace('s', '')}–${+k.slice(0, 4) + 24}`, v)).join('') + '</tbody>';
+
+// ------------------------------------------------ density
+document.getElementById('fields').innerHTML = `<thead><tr><th>Field</th><th class="n">Prizes</th><th class="n">Links touching</th><th class="n">Links per prize</th><th class="n">Within-field density</th><th class="n">Share linked</th></tr></thead><tbody>` +
+  D.fields.map(f => `<tr><td>${esc(f.label)}</td><td class="n">${f.prizes}</td><td class="n">${f.all_links}</td><td class="n">${f.links_per_prize.toFixed(2)}</td><td class="n">${f.density.toFixed(3)}</td><td class="n">${Math.round(f.connected_share * 100)}%</td></tr>`).join('') + '</tbody>';
+const outd = {}; dirE.forEach(e => { if (N[e.source].nobel) outd[e.source] = (outd[e.source] || 0) + 1; });
+document.getElementById('outdeg').innerHTML = `<thead><tr><th>Prize</th><th class="n">Later prizes fed</th></tr></thead><tbody>` +
+  Object.entries(outd).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([id, k]) => `<tr><td>${chip(id)}</td><td class="n">${k}</td></tr>`).join('') + '</tbody>';
+document.getElementById('ancestors').innerHTML = `<thead><tr><th>Discovery</th><th class="n">Direct parents (laureates)</th><th class="n">All upstream, documented</th><th class="n">All upstream, incl. inferred</th></tr></thead><tbody>` +
+  [...D.most_direct_parents.slice(0, 4), ...D.most_ancestors.slice(0, 3)].filter((r, i, a) => a.findIndex(x => x.id === r.id) === i).map(r => { const full = D.most_ancestors.find(x => x.id === r.id) || r; return `<tr><td>${chip(r.id)}</td><td class="n">${r.direct_parents} (${r.direct_parent_laureates})</td><td class="n">${full.ancestor_laureates_H} laureates</td><td class="n">${full.ancestor_laureates} laureates</td></tr>`; }).join('') + '</tbody>';
+
+// ------------------------------------------------ evidence table
+const evT = document.getElementById('ev-table'), evQ = document.getElementById('ev-q'), evC = document.getElementById('ev-c');
+function renderEv() {
+  const q = evQ.value.trim().toLowerCase(), cf = evC.value;
+  const rows = E.filter(e => (!cf || e.confidence === cf) && (!q || [label(e.source), label(e.target), e.claim, N[e.source].laureates.join(' '), N[e.target].laureates.join(' ')].join(' ').toLowerCase().includes(q)));
+  document.getElementById('ev-count').textContent = `${rows.length} of ${E.length} links`;
+  evT.innerHTML = `<thead><tr><th>From → to</th><th>Relationship</th><th>Grade</th><th class="n">Gap (work / award)</th><th>Evidence</th><th>Sources</th></tr></thead><tbody>` +
+    rows.map(e => `<tr><td>${chip(e.source)}<span class="arrow">→</span>${chip(e.target)}</td><td>${esc(e.type_label)}<br><span class="muted">${e.scope === 'direct' ? 'direct' : 'ancestry'}</span></td><td>${conf(e.confidence)}</td><td class="n">${e.work_gap} / ${e.award_gap ?? '–'}</td><td style="min-width:260px">${esc(e.claim)}</td><td class="src" style="min-width:200px;font-size:12.5px">${e.sources.map(s => `<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s.replace('https://', '').replace('www.', ''))}</a>`).join('<br>')}${e.verified_in_session ? '<br><span class="tick-ok">✓ re-checked</span>' : ''}</td></tr>`).join('') + '</tbody>';
+}
+evQ.addEventListener('input', renderEv); evC.addEventListener('change', renderEv); renderEv();
+})();
+</script>
