@@ -1,0 +1,860 @@
+<title>Optogenetics, 1866–2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,500;0,700;1,300;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a long dark "light path" — chapters stacked like an optical bench, each chapter one instrument (timeline, race chart, rig, brain map). Spectral colours are data: 470 nm blue excites, 589 nm amber silences. */
+:root{
+  --bg:#0a0d18; --surface:#11162a; --surface-2:#171d35; --line:#262f4d; --line-soft:#1c2440;
+  --fg:#e8ebf5; --muted:#9aa3bf; --faint:#6a7393;
+  --l470:#3d9bff; --l470-glow:rgba(61,155,255,.35); --l589:#ffb02e; --l640:#ff5c5c; --chloro:#7bd86f;
+  --c-algae:#7bd86f; --c-rhod:#b892ff; --c-pre:#8ea2c4; --c-chr:#3d9bff; --c-tool:#ffb02e; --c-circ:#ff6fae; --c-clin:#2fd2c4; --c-cred:#f2d36b;
+  --ok:#7bd86f; --bad:#ff6b6b;
+  --f-display:"Spectral", Georgia, "Times New Roman", serif;
+  --f-body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+  --bg:#f2f3f8; --surface:#ffffff; --surface-2:#e9ecf5; --line:#cfd5e6; --line-soft:#e1e5f0;
+  --fg:#131a30; --muted:#4f5975; --faint:#7d86a2;
+  --l470:#0b6fe0; --l470-glow:rgba(11,111,224,.18); --l589:#b56b00; --l640:#cf2f2f; --chloro:#2f8f3a;
+  --c-algae:#2f8f3a; --c-rhod:#7a4fd6; --c-pre:#5a6f92; --c-chr:#0b6fe0; --c-tool:#b56b00; --c-circ:#c8337a; --c-clin:#0f8f86; --c-cred:#9a7a00;
+  --ok:#2f8f3a; --bad:#c93434; color-scheme:light;
+}}
+:root[data-theme="light"]{
+  --bg:#f2f3f8; --surface:#ffffff; --surface-2:#e9ecf5; --line:#cfd5e6; --line-soft:#e1e5f0;
+  --fg:#131a30; --muted:#4f5975; --faint:#7d86a2;
+  --l470:#0b6fe0; --l470-glow:rgba(11,111,224,.18); --l589:#b56b00; --l640:#cf2f2f; --chloro:#2f8f3a;
+  --c-algae:#2f8f3a; --c-rhod:#7a4fd6; --c-pre:#5a6f92; --c-chr:#0b6fe0; --c-tool:#b56b00; --c-circ:#c8337a; --c-clin:#0f8f86; --c-cred:#9a7a00;
+  --ok:#2f8f3a; --bad:#c93434; color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--fg); font:16px/1.6 var(--f-body); margin:0; -webkit-font-smoothing:antialiased}
+a{color:var(--l470)}
+button{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--l470); outline-offset:2px; border-radius:4px}
+.wrap{max-width:1180px; margin:0 auto; padding-inline:clamp(16px,4vw,40px)}
+h1,h2,h3{font-family:var(--f-display); font-weight:500; text-wrap:balance; margin:0; letter-spacing:-.01em}
+h2{font-size:clamp(1.9rem,1.2rem + 2.4vw,2.9rem); line-height:1.08}
+h3{font-size:1.3rem; line-height:1.2}
+p{margin:0}
+.eyebrow{font:500 .72rem/1 var(--f-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.lede{color:var(--muted); max-width:62ch; font-size:1.05rem}
+.mono{font-family:var(--f-mono)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* nav */
+.nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:color-mix(in srgb,var(--bg) 88%,transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line-soft)}
+.nav .wrap{display:flex; gap:18px; align-items:center; overflow-x:auto; scrollbar-width:none; padding-block:10px}
+.nav .wrap::-webkit-scrollbar{display:none}
+.nav a{font:500 .74rem/1 var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; white-space:nowrap; padding:6px 0; border-bottom:1px solid transparent}
+.nav a:hover,.nav a.on{color:var(--fg); border-color:var(--l470)}
+.nav .brand{font-family:var(--f-display); font-style:italic; text-transform:none; letter-spacing:0; font-size:1rem; color:var(--fg)}
+
+/* hero */
+.hero{position:relative; overflow:hidden; border-bottom:1px solid var(--line-soft)}
+.hero canvas{position:absolute; inset:0; width:100%; height:100%; display:block; cursor:crosshair}
+.hero .wrap{position:relative; pointer-events:none; padding-block:clamp(56px,9vw,110px) 40px; display:grid; gap:22px}
+.hero h1{font-size:clamp(2.6rem,1.4rem + 5.4vw,5.6rem); line-height:.98; font-weight:300; max-width:13ch}
+.hero h1 em{font-style:italic; color:var(--l470)}
+.hero h1 .g{font-style:italic; color:var(--chloro)}
+.hero .lede{font-size:clamp(1rem,.95rem + .3vw,1.15rem); max-width:54ch}
+.hero .lede, .hero h1{text-shadow:0 0 18px var(--bg), 0 0 4px var(--bg)}
+.hero-ctrl{pointer-events:auto; display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:3px; background:var(--surface)}
+.seg button{border:0; background:transparent; padding:6px 14px; border-radius:999px; cursor:pointer; font-size:.85rem; color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface-2); color:var(--fg); box-shadow:inset 0 0 0 1px var(--line)}
+.hero-note{pointer-events:auto; font-size:.85rem; color:var(--muted); max-width:60ch; background:color-mix(in srgb,var(--surface) 82%,transparent); border:1px solid var(--line-soft); border-radius:10px; padding:10px 14px}
+.hero-note b{color:var(--fg); font-weight:600}
+.stats{display:flex; flex-wrap:wrap; gap:28px; margin-top:8px}
+.stat .n{font:300 2.1rem/1 var(--f-display)}
+.stat .l{font-size:.78rem; color:var(--muted); margin-top:4px; max-width:20ch}
+
+/* chapters */
+section.ch{padding-block:clamp(56px,8vw,96px); border-bottom:1px solid var(--line-soft); scroll-margin-top:48px}
+.ch-head{display:grid; gap:14px; margin-bottom:32px}
+.ch-head .eyebrow b{color:var(--l470); font-weight:500}
+
+/* timeline */
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
+.chip{display:inline-flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:5px 11px; font-size:.8rem; cursor:pointer; color:var(--fg)}
+.chip i{width:9px; height:9px; border-radius:50%; display:inline-block}
+.chip[aria-pressed="false"]{opacity:.42}
+.chip[aria-pressed="false"] i{background:transparent!important; box-shadow:inset 0 0 0 1.5px var(--faint)}
+.tl-shell{display:grid; grid-template-columns:auto minmax(0,1fr); border:1px solid var(--line); border-radius:14px; background:var(--surface); overflow:hidden}
+.tl-labels{border-right:1px solid var(--line-soft); background:var(--surface)}
+.tl-scroll{overflow-x:auto; overscroll-behavior-x:contain}
+.tl-scroll svg{display:block}
+.tl-bar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-top:12px}
+.btn{border:1px solid var(--line); background:var(--surface); border-radius:8px; padding:7px 13px; cursor:pointer; font-size:.85rem; display:inline-flex; gap:6px; align-items:center}
+.btn:hover{border-color:var(--faint)}
+.btn.primary{background:var(--l470); border-color:var(--l470); color:#fff}
+.hint{font-size:.8rem; color:var(--faint)}
+.ev{cursor:pointer}
+.ev circle{transition:r .15s}
+.ev:hover circle.dot{r:8}
+.detail{margin-top:18px; display:grid; grid-template-columns:minmax(0,170px) minmax(0,1fr); gap:24px; border:1px solid var(--line); border-radius:14px; padding:22px 24px; background:var(--surface); position:relative; overflow:hidden}
+.detail::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--lane,var(--l470))}
+.detail .yr{font:300 3.2rem/1 var(--f-display); font-variant-numeric:tabular-nums}
+.detail .mo{font:.8rem var(--f-mono); color:var(--muted); margin-top:6px}
+.detail h3{font-size:1.45rem; margin:8px 0 6px}
+.detail .who{font-size:.9rem; color:var(--muted); margin-bottom:10px}
+.detail .body{max-width:68ch}
+.detail .cite{font:.78rem/1.5 var(--f-mono); color:var(--faint); margin-top:12px}
+.badges{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px}
+.badge{font:500 .68rem/1 var(--f-mono); letter-spacing:.06em; text-transform:uppercase; padding:5px 8px; border-radius:5px; border:1px solid var(--line); color:var(--muted)}
+.lane-tag{display:inline-flex; gap:6px; align-items:center; font:500 .7rem/1 var(--f-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.lane-tag i{width:8px; height:8px; border-radius:50%}
+.tip{position:fixed; z-index:50; pointer-events:none; max-width:280px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:8px 11px; font-size:.8rem; line-height:1.4; box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.tip b{display:block; font-weight:600}
+.tip span{color:var(--muted); font-family:var(--f-mono); font-size:.72rem}
+
+/* race */
+.fig{border:1px solid var(--line); border-radius:14px; background:var(--surface); padding:18px 18px 10px}
+.fig-scroll{overflow-x:auto}
+.legend{display:flex; flex-wrap:wrap; gap:16px; font-size:.8rem; color:var(--muted); margin:6px 4px 10px}
+.legend span{display:inline-flex; gap:6px; align-items:center}
+.two{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:18px; margin-top:22px}
+.quote{border-left:2px solid var(--line); padding:4px 0 4px 16px}
+.quote p{font:italic 300 1.2rem/1.4 var(--f-display)}
+.quote .by{font-size:.8rem; color:var(--muted); margin-top:8px}
+
+/* lab */
+.lab{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px}
+.panel{border:1px solid var(--line); border-radius:14px; background:var(--surface); padding:16px}
+.opsins{display:grid; gap:8px}
+.opsin{display:grid; grid-template-columns:14px 1fr auto; gap:10px; align-items:center; text-align:left; border:1px solid var(--line-soft); background:var(--bg); border-radius:10px; padding:9px 11px; cursor:pointer}
+.opsin .sw{width:14px; height:14px; border-radius:50%}
+.opsin b{font-weight:600; font-size:.92rem}
+.opsin small{display:block; color:var(--muted); font-size:.74rem}
+.opsin .nm{font:.74rem var(--f-mono); color:var(--muted)}
+.opsin[aria-pressed="true"]{border-color:var(--sel); box-shadow:0 0 0 1px var(--sel), 0 0 22px -6px var(--sel)}
+.ctl{display:grid; gap:4px; margin-top:16px}
+.ctl label{display:flex; justify-content:space-between; font-size:.82rem; color:var(--muted)}
+.ctl label output{font-family:var(--f-mono); color:var(--fg)}
+input[type=range]{width:100%; accent-color:var(--l470)}
+.scope{position:relative; border-radius:10px; background:var(--bg); border:1px solid var(--line-soft); overflow:hidden}
+.scope canvas{display:block; width:100%; height:300px}
+.scope .tag{position:absolute; top:10px; left:12px; font:.72rem var(--f-mono); color:var(--muted)}
+.readout{display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-top:14px}
+.readout div{border-top:1px solid var(--line); padding-top:8px}
+.readout .v{font:300 1.6rem/1.1 var(--f-display); font-variant-numeric:tabular-nums}
+.readout .k{font-size:.74rem; color:var(--muted)}
+.lab-info{margin-top:14px; font-size:.92rem; color:var(--muted)}
+.lab-info b{color:var(--fg)}
+.spectrum{margin-top:18px}
+.spectrum svg{width:100%; height:auto; display:block}
+.mini{margin-top:18px}
+
+/* matrix */
+.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:760px; font-size:.88rem}
+th,td{padding:11px 14px; border-bottom:1px solid var(--line-soft); text-align:left; vertical-align:top}
+thead th{font:500 .7rem/1.3 var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); background:var(--surface-2)}
+td.m{text-align:center; font-size:1.05rem; width:110px}
+.mk{display:inline-block; width:13px; height:13px; border-radius:50%; vertical-align:-2px}
+.mk.y{background:var(--ok)} .mk.n{box-shadow:inset 0 0 0 1.5px var(--bad)} .mk.p{background:linear-gradient(90deg,var(--l589) 50%,transparent 50%); box-shadow:inset 0 0 0 1.5px var(--l589)} .mk.u{width:12px; height:2px; border-radius:1px; background:var(--faint); vertical-align:3px}
+.legend-mk .mk{margin-left:10px; margin-right:4px}
+.legend-mk .mk:first-child{margin-left:0}
+tr.hl td{background:color-mix(in srgb,var(--l470) 10%,transparent)}
+tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--l470)}
+td small{display:block; color:var(--muted); font-size:.76rem}
+
+/* brain */
+.brain{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:20px; align-items:start}
+.brain svg{width:100%; height:auto; display:block}
+.findings{display:grid; gap:6px}
+.brain > .fig{position:sticky; top:64px}
+.finding{text-align:left; border:1px solid var(--line-soft); background:var(--surface); border-radius:10px; padding:10px 12px; cursor:pointer}
+.finding .y{font:.72rem var(--f-mono); color:var(--muted)}
+.finding b{display:block; font-weight:600; font-size:.92rem}
+.finding p{font-size:.82rem; color:var(--muted); display:none; margin-top:6px}
+.finding[aria-pressed="true"]{border-color:var(--c-circ); box-shadow:0 0 0 1px var(--c-circ)}
+.finding[aria-pressed="true"] p{display:block}
+.region circle{transition:opacity .2s, r .2s}
+.region text{font:500 10.5px var(--f-mono); transition:opacity .2s}
+.proj{fill:none; stroke-width:2.2; transition:opacity .2s}
+
+/* clinic */
+.steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:1px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--line-soft)}
+.step{padding:20px; background:var(--surface)}
+.step .y{font:300 2rem/1 var(--f-display); color:var(--c-clin)}
+.step h3{font-size:1.05rem; margin:10px 0 6px; font-family:var(--f-body); font-weight:600}
+.step p{font-size:.85rem; color:var(--muted)}
+.step .who{font:.72rem var(--f-mono); color:var(--faint); margin-top:10px}
+
+/* credit */
+.tabs{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px}
+.tab{border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:8px 15px; cursor:pointer; font-size:.88rem}
+.tab[aria-selected="true"]{background:var(--fg); color:var(--bg); border-color:var(--fg)}
+.rule{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; border:1px solid var(--line); border-radius:14px; background:var(--surface); padding:22px}
+.rule h3{font-size:1.6rem; margin-bottom:10px}
+.rule .first{font:300 1.15rem/1.4 var(--f-display); font-style:italic}
+.rule ol{margin:0; padding-left:20px; display:grid; gap:8px; font-size:.9rem}
+.rule ol li::marker{font-family:var(--f-mono); color:var(--muted)}
+.prize td.d{text-align:center}
+.dot{display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--c-cred)}
+.dot.no{background:transparent; box-shadow:inset 0 0 0 1px var(--line)}
+.nobel td:first-child b{color:var(--c-cred)}
+
+/* sources */
+.src{display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.src div{border-top:1px solid var(--line); padding-top:12px; font-size:.88rem; color:var(--muted)}
+.src b{color:var(--fg); display:block; margin-bottom:4px}
+.src .badge{margin-bottom:8px; display:inline-block}
+footer{padding-block:40px 60px; color:var(--faint); font-size:.8rem}
+
+@media (max-width:820px){
+  .lab,.brain,.rule{grid-template-columns:minmax(0,1fr)}
+  .detail{grid-template-columns:minmax(0,1fr); gap:6px}
+  .detail .yr{font-size:2.4rem}
+  .brain > .fig{position:static}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none!important; scroll-behavior:auto!important} }
+</style>
+
+<nav class="nav" aria-label="Chapters">
+  <div class="wrap">
+    <a href="#top" class="brand">Optogenetics</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#race">The race</a>
+    <a href="#lab">Switch lab</a>
+    <a href="#before">Before the switch</a>
+    <a href="#circuits">Circuits</a>
+    <a href="#clinic">Clinic</a>
+    <a href="#credit">Credit</a>
+    <a href="#sources">Sources</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="algae" aria-label="Animated Chlamydomonas cells swimming toward a light source that follows your pointer"></canvas>
+  <div class="wrap">
+    <div class="eyebrow">160 years · 1866 → 2026</div>
+    <h1>From an <span class="g">alga’s eyespot</span> to a <em>switch</em> for the brain</h1>
+    <p class="lede">In 1866 a St Petersburg botanist watched green algae swim toward light. In 2026 the Nobel Prize in Physiology or Medicine went to the people who found the protein behind that behaviour and turned it into a way to switch neurons on and off with light. This is how that happened.</p>
+    <div class="hero-ctrl">
+      <div class="seg" role="group" aria-label="Light intensity">
+        <button id="lowBtn" aria-pressed="true">Dim light</button>
+        <button id="highBtn" aria-pressed="false">Bright light</button>
+      </div>
+      <span class="hint" style="pointer-events:none">Move your pointer. The light follows it.</span>
+    </div>
+    <p class="hero-note" id="heroNote"><b>Famintzin, 1866–67.</b> In dim light <i>Chlamydomonas</i> swims straight toward the source. Under strong light the cells stop short and gather where the brightness suits them. Peter Hegemann has pointed back to this work as the start of the story.</p>
+    <div class="stats">
+      <div class="stat"><div class="n tnum">1 ms</div><div class="l">flash of blue light enough to drive a neuron (Boyden &amp; Deisseroth, per STAT)</div></div>
+      <div class="stat"><div class="n tnum">315</div><div class="l">amino acids of ChR2 sufficient for a light-gated channel (Nagel et al. 2003)</div></div>
+      <div class="stat"><div class="n tnum">470 nm</div><div class="l">blue light that opens channelrhodopsin-2</div></div>
+      <div class="stat"><div class="n tnum">139 yrs</div><div class="l">from Famintzin’s algae paper to millisecond control of neurons</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="ch" id="timeline">
+  <div class="wrap">
+    <div class="ch-head">
+      <div class="eyebrow"><b>Chapter 1</b> · The whole arc</div>
+      <h2>Eight threads that converged on one protein</h2>
+      <p class="lede">Each row is a line of research. Algal physiology and archaeal pump biochemistry ran for decades without any neuroscience goal. They met engineers looking for a light switch for neurons in 2002–2005. The time axis stretches after 1970 and again after 2000, where events crowd together. Click any dot.</p>
+    </div>
+    <div class="filters" id="filters" aria-label="Show or hide research threads"></div>
+    <div class="tl-shell">
+      <div class="tl-labels"><svg id="tlLabels"></svg></div>
+      <div class="tl-scroll" id="tlScroll"><svg id="tl" role="img" aria-label="Timeline of optogenetics, 1866 to 2026"></svg></div>
+    </div>
+    <div class="tl-bar">
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn" id="prevEv" aria-label="Previous event">← Prev</button>
+        <button class="btn" id="nextEv" aria-label="Next event">Next →</button>
+        <button class="btn primary" id="playEv">▶ Play the milestones</button>
+      </div>
+      <span class="hint">Arrow keys step through events · <span id="evCount" class="tnum"></span></span>
+    </div>
+    <article class="detail" id="detail" aria-live="polite"></article>
+  </div>
+</section>
+
+<section class="ch" id="race">
+  <div class="wrap">
+    <div class="ch-head">
+      <div class="eyebrow"><b>Chapter 2</b> · 2004–2006</div>
+      <h2>The race to put channelrhodopsin into neurons</h2>
+      <p class="lede">Once ChR2 was described in 2003, at least five groups tried expressing it in neurons. The chart separates when an experiment first worked in the lab from when it appeared in print. Zhuo-Hua Pan at Wayne State had light-driven responses in retinal neurons six months before Stanford, but his paper came out eight months after theirs.</p>
+    </div>
+    <div class="fig">
+      <div class="legend">
+        <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" style="fill:var(--l470)"/></svg>First lab result</span>
+        <span><svg width="14" height="14"><rect x="2" y="2" width="10" height="10" style="fill:var(--fg)"/></svg>Peer-reviewed paper</span>
+        <span><svg width="14" height="14"><path d="M3 3 L11 11 M11 3 L3 11" style="stroke:var(--bad);stroke-width:2"/></svg>Rejection</span>
+        <span><svg width="14" height="14"><path d="M7 2 L12 12 L2 12Z" style="fill:var(--l589)"/></svg>Conference talk</span>
+        <span><svg width="14" height="14"><circle cx="7" cy="7" r="4" style="fill:none;stroke:var(--muted);stroke-width:1.5"/></svg>Other step</span>
+        <span>~ approximate month</span>
+      </div>
+      <div class="fig-scroll"><svg id="raceSvg" viewBox="0 0 960 360" style="min-width:760px;width:100%;height:auto" role="img" aria-label="Lab results and publication dates of groups expressing channelrhodopsin in neurons, 2004 to 2006"></svg></div>
+    </div>
+    <div class="two">
+      <div class="quote"><p>“Boyden et al. presented theirs as a new technology rather than as a scientific finding.”</p><div class="by">Nature Neuroscience editor’s reply to Pan, paraphrased in Scientific American / STAT (2016)</div></div>
+      <div class="quote"><p>“There is too little here to entice most neuroscientists.”</p><div class="by">Journal of Neuroscience reviewer on Pan’s 2005 manuscript. An expanded version passed review in 2006 with minimal revisions.</div></div>
+      <div class="quote"><p>“There’s both intentional and unintentional teamwork.”</p><div class="by">Ed Boyden, on learning that Pan ran the experiment first</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="lab">
+  <div class="wrap">
+    <div class="ch-head">
+      <div class="eyebrow"><b>Chapter 3</b> · How it works</div>
+      <h2>Switch lab: drive a neuron with light</h2>
+      <p class="lede">A simplified neuron (leaky integrate-and-fire) expressing one opsin at a time. Channelrhodopsins are ion channels that light opens directly, so ions flow down their gradient within milliseconds. Pumps such as halorhodopsin move one ion per photon. Change the opsin, the pulse rate and the pulse width, and watch how faithfully the cell follows. The kinetics are illustrative, not fitted to data.</p>
+    </div>
+    <div class="lab">
+      <div class="panel">
+        <div class="eyebrow" style="margin-bottom:10px">Opsin</div>
+        <div class="opsins" id="opsins"></div>
+        <div class="ctl" id="freqCtl"><label for="freq">Pulse rate <output id="freqOut">10 Hz</output></label><input type="range" id="freq" min="2" max="60" step="1" value="10"></div>
+        <div class="ctl" id="widthCtl"><label for="pw">Pulse width <output id="pwOut">5 ms</output></label><input type="range" id="pw" min="1" max="20" step="1" value="5"></div>
+      </div>
+      <div class="panel">
+        <div class="scope"><canvas id="scope"></canvas><div class="tag" id="scopeTag">Membrane potential · 1 s sweep</div></div>
+        <div class="readout" id="readout"></div>
+        <p class="lab-info" id="labInfo"></p>
+        <div class="spectrum"><div class="eyebrow" style="margin-bottom:8px">Activation peaks across the visible spectrum (approximate)</div><svg id="spec" viewBox="0 -14 700 106" role="img" aria-label="Opsin activation peaks by wavelength"></svg></div>
+        <div class="mini" id="mini"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="before">
+  <div class="wrap">
+    <div class="ch-head">
+      <div class="eyebrow"><b>Chapter 4</b> · 1971–2007</div>
+      <h2>Before the switch: what earlier methods lacked</h2>
+      <p class="lede">The Nobel Committee lists what a practical light actuator needed: genetic targeting, a single compact protein, no added chemicals, millisecond speed and good tolerance by the cell. Each earlier approach met some of these. ChR2 was the first to meet all of them.</p>
+    </div>
+    <div class="tbl-wrap"><table id="matrix"></table></div>
+    <p class="hint legend-mk" style="margin-top:10px"><span class="mk y"></span> meets it <span class="mk p"></span> partly <span class="mk n"></span> does not <span class="mk u"></span> not addressed in the sources used here</p>
+  </div>
+</section>
+
+<section class="ch" id="circuits">
+  <div class="wrap">
+    <div class="ch-head">
+      <div class="eyebrow"><b>Chapter 5</b> · 2007 onward</div>
+      <h2>From reading the brain to writing to it</h2>
+      <p class="lede">With optical fibres, light could reach deep structures in freely moving animals. Turning specific cells or projections on and off showed which ones are sufficient or necessary for a behaviour. One region often turned out to hold several separate pathways. Pick a finding to see the cells and projections involved.</p>
+    </div>
+    <div class="brain">
+      <div class="fig"><svg id="brainSvg" viewBox="0 0 600 340" role="img" aria-label="Schematic side view of a mouse brain with regions studied by optogenetics"></svg><p class="hint" style="padding:6px 4px 8px">Schematic sagittal view, rostral left. Regions are projected onto one plane and positions are approximate.</p></div>
+      <div class="findings" id="findings"></div>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="clinic">
+  <div class="wrap">
+    <div class="ch-head">
+      <div class="eyebrow"><b>Chapter 6</b> · Clinical frontier</div>
+      <h2>Making blind retinas see light again</h2>
+      <p class="lede">In retinitis pigmentosa the rods and cones die, but the retinal ganglion cells that send signals to the brain survive. If those cells carry a channelrhodopsin, they can respond to light directly. This was Pan’s goal from the start, and it is still the most advanced clinical use of optogenetics.</p>
+    </div>
+    <div class="steps" id="steps"></div>
+  </div>
+</section>
+
+<section class="ch" id="credit">
+  <div class="wrap">
+    <div class="ch-head">
+      <div class="eyebrow"><b>Chapter 7</b> · Who invented it?</div>
+      <h2>The answer depends on the rules you use</h2>
+      <p class="lede">The 2016 STAT investigation asked what “inventing” means in science. Academics count the first peer-reviewed paper. Patent law counts when an idea was conceived and first shown to work. Prizes follow reputation, which grows on itself. The 2026 Nobel went to the discovery of the channel itself and to its first use as a neuronal switch.</p>
+    </div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="rule" id="rule" role="tabpanel"></div>
+    <div class="tbl-wrap" style="margin-top:22px"><table class="prize" id="prize"></table></div>
+    <p class="hint" style="margin-top:10px">Shown: four major prizes for optogenetics. Pan received none of them. His patent on restoring vision with channelrhodopsin was licensed by RetroSense, whose 2016 trial was the first use of optogenetics in humans.</p>
+  </div>
+</section>
+
+<section class="ch" id="sources">
+  <div class="wrap">
+    <div class="ch-head">
+      <div class="eyebrow"><b>Sources</b></div>
+      <h2>Where the facts come from</h2>
+      <p class="lede">Each timeline event is tagged with its sources. Most of the history comes from the Nobel Committee’s scientific background. The race and the credit dispute come from the STAT report.</p>
+    </div>
+    <div class="src">
+      <div><span class="badge">Nobel</span><b>Optogenetics: Discovery of a neuronal switch</b>Scientific background to the 2026 Nobel Prize in Physiology or Medicine. A. El Manira, P. Svenningsson, S. Linnarsson, Nobel Committee, Karolinska Institutet. <a href="https://www.nobelprize.org/uploads/2026/10/advanced-medicineprize2026.pdf" target="_blank" rel="noopener">nobelprize.org PDF</a></div>
+      <div><span class="badge">STAT</span><b>He May Have Invented One of Neuroscience’s Biggest Advances, but You’ve Never Heard of Him</b>Anna Vlasits, STAT, 1 Sep 2016; republished in Scientific American, 6 Sep 2016. Pan’s 2004–2006 dates come from documents and interviews in this report.</div>
+      <div><span class="badge">Report</span><b>Research report: Andrey Famintzin (1866 <i>Chlamydomonas</i> study)</b>Supplied by you. Bibliographic details of Famintzin’s 1866 paper in <i>Mélanges Biologiques</i> VI, pp. 73–93. His expanded 1867 account appeared in <i>Jahrbücher für wissenschaftliche Botanik</i> 6.</div>
+      <div><span class="badge">Record</span><b>General record</b>A few dates outside the two articles: the 2021 Lasker Basic Medical Research Award (Deisseroth, Hegemann, Oesterhelt) and the Chrimson opsin (Klapoetke et al., 2014). They are marked “Record” where used.</div>
+    </div>
+  </div>
+</section>
+</main>
+<footer><div class="wrap">Built from the supplied Nobel Committee background, the STAT/Scientific American report and the Famintzin research report. Simulations are teaching models, not fits to experimental data.</div></footer>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tip=$('#tip');
+function showTip(e,html){tip.innerHTML=html;tip.hidden=false;const x=Math.min(e.clientX+14,innerWidth-300);const y=e.clientY+16;tip.style.left=x+'px';tip.style.top=(y+tip.offsetHeight>innerHeight?e.clientY-tip.offsetHeight-10:y)+'px'}
+function hideTip(){tip.hidden=true}
+
+/* ---------------- HERO: phototaxis ---------------- */
+(function hero(){
+  const cv=$('#algae'), ctx=cv.getContext('2d'); let W=0,H=0,dpr=1;
+  let bright=false, light={x:0,y:0}, pointer=null, t0=performance.now();
+  const cells=[];
+  function size(){dpr=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+  size(); addEventListener('resize',size);
+  const N=W<600?38:90; for(let i=0;i<N;i++)cells.push({x:Math.random()*W,y:Math.random()*H,a:Math.random()*6.28,v:.6+Math.random()*.6,ph:Math.random()*6.28,s:.8+Math.random()*.5});
+  const host=cv.parentElement;
+  host.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();pointer={x:e.clientX-r.left,y:e.clientY-r.top}});
+  host.addEventListener('pointerleave',()=>pointer=null);
+  const setB=b=>{bright=b;$('#lowBtn').setAttribute('aria-pressed',!b);$('#highBtn').setAttribute('aria-pressed',b)};
+  $('#lowBtn').onclick=()=>setB(false); $('#highBtn').onclick=()=>setB(true);
+  function step(now){
+    const t=(now-t0)/1000;
+    if(pointer){light.x+= (pointer.x-light.x)*.12; light.y+=(pointer.y-light.y)*.12}
+    else {light.x=W*(.68+.18*Math.sin(t*.23)); light.y=H*(.5+.3*Math.sin(t*.31+1))}
+    const R=bright?Math.min(W,H)*.26:0;
+    for(const c of cells){
+      const dx=light.x-c.x, dy=light.y-c.y, d=Math.hypot(dx,dy)||1;
+      let target=Math.atan2(dy,dx);
+      if(bright){ if(d<R) target+=Math.PI; else if(d<R*1.25) target+=Math.PI/2*(c.s>1.05?1:-1); }
+      let da=((target-c.a+Math.PI*3)%(Math.PI*2))-Math.PI;
+      const gain=bright?.05:.035;
+      c.a+=da*gain+(Math.random()-.5)*.35;
+      c.ph+=.35;
+      const sp=c.v*(1.3+.5*Math.sin(c.ph));
+      c.x+=Math.cos(c.a)*sp; c.y+=Math.sin(c.a)*sp;
+      if(c.x<-20)c.x=W+20; if(c.x>W+20)c.x=-20; if(c.y<-20)c.y=H+20; if(c.y>H+20)c.y=-20;
+    }
+    draw(R);
+    if(!reduce) requestAnimationFrame(step);
+  }
+  function draw(R){
+    ctx.clearRect(0,0,W,H);
+    const glow=bright?cssv('--l589'):cssv('--l470');
+    const g=ctx.createRadialGradient(light.x,light.y,0,light.x,light.y,bright?Math.max(R*1.6,180):220);
+    g.addColorStop(0,hexA(glow,bright?.55:.45)); g.addColorStop(.35,hexA(glow,.14)); g.addColorStop(1,hexA(glow,0));
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=hexA('#ffffff',.9); ctx.beginPath(); ctx.arc(light.x,light.y,3,0,7); ctx.fill();
+    const green=cssv('--chloro'), fl=cssv('--muted');
+    for(const c of cells){
+      ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(c.a); ctx.scale(c.s,c.s);
+      ctx.strokeStyle=hexA(fl,.6); ctx.lineWidth=.8; const w=Math.sin(c.ph)*4;
+      ctx.beginPath(); ctx.moveTo(6,0); ctx.quadraticCurveTo(12,-4-w,16,-8+w); ctx.moveTo(6,0); ctx.quadraticCurveTo(12,4+w,16,8-w); ctx.stroke();
+      ctx.fillStyle=hexA(green,.85); ctx.beginPath(); ctx.ellipse(0,0,6.5,4.6,0,0,7); ctx.fill();
+      ctx.fillStyle=cssv('--l640'); ctx.beginPath(); ctx.arc(1.5,-3,1.2,0,7); ctx.fill();
+      ctx.restore();
+    }
+  }
+  if(reduce){ light={x:W*.7,y:H*.45}; cells.forEach(c=>{const a=Math.random()*6.28,r=40+Math.random()*120;c.x=light.x+Math.cos(a)*r;c.y=light.y+Math.sin(a)*r;c.a=Math.atan2(light.y-c.y,light.x-c.x)}); draw(0);
+    $('#lowBtn').onclick=()=>{setB(false);draw(0)}; $('#highBtn').onclick=()=>{setB(true);draw(0)}; }
+  else requestAnimationFrame(step);
+})();
+function hexA(c,a){ c=c.trim(); if(c.startsWith('#')){let h=c.slice(1); if(h.length===3)h=h.split('').map(x=>x+x).join(''); const n=parseInt(h,16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`} return c }
+
+/* ---------------- DATA: timeline ---------------- */
+const LANES=[
+ {id:'algae',name:'Algal phototaxis',short:'Algae',col:'--c-algae'},
+ {id:'rhod',name:'Microbial rhodopsins',short:'Microbial',col:'--c-rhod'},
+ {id:'pre',name:'Early light control',short:'Early ctrl',col:'--c-pre'},
+ {id:'chr',name:'ChR → optogenetics',short:'ChR',col:'--c-chr'},
+ {id:'tool',name:'Expanding toolbox',short:'Toolbox',col:'--c-tool'},
+ {id:'circ',name:'Circuits & behaviour',short:'Circuits',col:'--c-circ'},
+ {id:'clin',name:'Clinic',short:'Clinic',col:'--c-clin'},
+ {id:'cred',name:'Recognition',short:'Credit',col:'--c-cred'}];
+const SRC={N:'Nobel background',S:'STAT / Sci Am',R:'Famintzin report',W:'Record'};
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const EV=[
+ {l:'algae',y:1866,t:'Famintzin: light steers algae',p:'Andrey S. Famintzin (1835–1918), St Petersburg',d:'Famintzin studies how light moves Chlamydomonas pulvisculus, Euglena viridis and Oscillatoria insignis. Per the supplied report, the cells came from Neva River water. In dim light the algae swim toward the source; in strong light they gather at an optimal brightness. This is one of the first systematic descriptions of phototaxis, the behaviour whose molecular basis would turn out to be channelrhodopsin.',c:'Famintzin A (1866) Die Wirkung des Lichtes auf die Bewegung der Chlamidomonas pulvisculus Ehr., Euglena viridis Ehr. und Oscillatoria insignis Tw. Mélanges Biologiques, Bull. Acad. Imp. Sci. St.-Pétersbourg VI:73–93',s:['R','W'],k:'Famintzin',r:0},
+ {l:'rhod',y:1971,t:'Bacteriorhodopsin discovered',p:'Dieter Oesterhelt, Walther Stoeckenius',d:'A rhodopsin-like protein is found in the purple membrane of the archaeon Halobacterium halobium. This founds the field of microbial rhodopsins. Peter Hegemann later did his PhD with Oesterhelt.',c:'Oesterhelt & Stoeckenius (1971) Nature New Biol 233:149',s:['N'],k:'bR',r:1},
+ {l:'pre',y:1971,t:'Laser stimulation of Aplysia neurons',p:'Richard Fork',d:'Fork uses the weak natural light sensitivity of Aplysia neurons to stimulate them with a laser. The approach was later abandoned because intense light damaged the cells.',c:'Fork (1971) Science 171:907',s:['N']},
+ {l:'rhod',y:1973,t:'bR is a light-driven proton pump',p:'Oesterhelt, Stoeckenius',d:'Bacteriorhodopsin turns out to pump protons out of the cell when lit. Light can move ions across a membrane through a single protein.',c:'Oesterhelt & Stoeckenius (1973) PNAS 70:2853',s:['N']},
+ {l:'rhod',y:1977,t:'A second light-driven ion transporter',p:'Akemi Matsuno-Yagi, Yasuo Mukohata',d:'A bR-deficient Halobacterium strain still hyperpolarizes in light, a sign of another light-driven transporter.',c:'Matsuno-Yagi & Mukohata (1977) BBRC 78:237',s:['N']},
+ {l:'algae',y:1978,t:'Suction electrodes record algal photoreceptor currents',p:'Felix Litvin, Oleg Sineshchekov',d:'Recording light-triggered electrical potentials in the alga Haematococcus pluvialis. Hegemann’s lab later used the same technique on Chlamydomonas.',c:'Litvin et al. (1978) Nature 271:476',s:['N']},
+ {l:'pre',y:1979,t:'Crick: we need to switch defined neurons',p:'Francis Crick',d:'In “Thinking about the brain”, Crick argues that understanding the brain requires a way to activate or inactivate “all neurons of just one type… leaving the others more or less unaltered.”',c:'Crick (1979) Sci Am 241:219',s:['N'],k:'Crick',r:2},
+ {l:'algae',y:1980,t:'Light antennas in phototactic algae',p:'Kenneth Foster, Robert Smyth',d:'A review of how flagellated algae sense light direction with an eyespot. Hegemann later joined Foster’s lab.',c:'Foster & Smyth (1980) Microbiol Rev 44:572',s:['N']},
+ {l:'rhod',y:1981,t:'Halorhodopsin isolated',p:'Yasuo Mukohata, Y. Kaji',d:'The second archaeal light-driven transporter is isolated. It later became the silencing tool NpHR.',c:'Mukohata & Kaji (1981) Arch Biochem Biophys 206:72',s:['N']},
+ {l:'pre',y:1983,t:'Dye plus laser fires leech neurons',p:'Ira Farber, Amiram Grinvald',d:'Staining membranes with a fluorescent dye and exciting it with a laser depolarizes leech neurons enough to fire action potentials. Phototoxicity ended this approach.',c:'Farber & Grinvald (1983) Science 222:1025',s:['N']},
+ {l:'algae',y:1984,t:'A rhodopsin drives Chlamydomonas phototaxis',p:'Kenneth Foster, Koji Nakanishi et al.',d:'Restoring phototaxis in blind mutants with retinal analogues shows that the photoreceptor is a rhodopsin.',c:'Foster et al. (1984) Nature 311:756',s:['N']},
+ {l:'rhod',y:1986,t:'NpHR is a chloride pump',p:'Bivin & Stoeckenius; Lanyi et al. 1990',d:'Halorhodopsin from Natronomonas pharaonis is identified as a light-driven chloride pump, characterised through 1990.',c:'Bivin & Stoeckenius (1986) J Gen Microbiol; Lanyi et al. (1990) J Biol Chem 265:1253',s:['N']},
+ {l:'algae',y:1990,t:'Optical recording of rhodopsin changes',p:'R. Uhl, Peter Hegemann',d:'Probing visual transduction in a “plant cell” with optical recording.',c:'Uhl & Hegemann (1990) Biophys J 58:1295',s:['N']},
+ {l:'algae',y:1991,t:'Photocurrents within microseconds',p:'Hartmann Harz, Peter Hegemann',d:'Suction-pipette recordings show the photoreceptor current in Chlamydomonas starts within microseconds of a flash. That is too fast for a second-messenger cascade like the one in our eyes.',c:'Harz & Hegemann (1991) Nature 351:489',s:['N'],k:'μs current',r:0},
+ {l:'algae',y:1992,t:'Hypothesis: receptor and channel are one',p:'Harz, Hegemann et al.; Holland et al. 1996',d:'Hegemann’s team proposes that the rhodopsin and the ion channel are tightly linked, maybe a single protein complex. The search moved from signalling pathways to molecular identity.',c:'Harz et al. (1992) Phil Trans R Soc B 338:39; Holland et al. (1996) Biophys J 70:924',s:['N']},
+ {l:'rhod',y:1995,t:'bR expressed in frog oocytes',p:'Georg Nagel, Ernst Bamberg',d:'Nagel expresses bacteriorhodopsin in Xenopus oocytes and measures light-driven proton pumping directly. This set-up later proved channelrhodopsin.',c:'Nagel et al. (1995) FEBS Lett 377:263',s:['N']},
+ {l:'pre',y:1999,t:'Crick: “the ideal signal would be light”',p:'Francis Crick',d:'Crick suggests switching neuron types on and off in an alert animal with light, an idea he called “rather far-fetched”.',c:'Crick (1999) Phil Trans R Soc B 354:2021',s:['N']},
+ {l:'algae',y:2000,t:'Chlamydomonas sequence database',p:'Asamizu et al.',d:'An expressed-sequence-tag database makes it possible to find the algal rhodopsin genes.',c:'Asamizu et al. (2000) DNA Res 7:305',s:['N']},
+ {l:'algae',y:2001,t:'Channelopsin-1 and -2 sequences',p:'Peter Hegemann lab',d:'Hegemann’s lab identifies two bR-like sequences, Chop1 (GenBank AF385748) and Chop2 (AF461397), and proposes they are light-driven ion channels.',c:'Hegemann, Fuhrmann, Kateriya (2001) J Phycol 37:668',s:['N']},
+ {l:'pre',y:2002,m:1,t:'chARGe: first genetic light-sensitization',p:'Boris Zemelman, Gero Miesenböck',d:'Three Drosophila phototransduction genes make cultured mammalian neurons fire in light. Multi-component and slow, but a first.',c:'Zemelman et al. (2002) Neuron 33:15',s:['N']},
+ {l:'algae',y:2002,m:4,t:'CSRA and CSRB drive phototaxis',p:'Oleg Sineshchekov, Kwang-Hwan Jung, John Spudich',d:'RNA interference shows the same two proteins generate the photoreceptor currents. The fast CSRA current suggests it might itself be a channel.',c:'Sineshchekov, Jung, Spudich (2002) PNAS 99:8689',s:['N']},
+ {l:'chr',y:2002,m:6,t:'Channelrhodopsin-1: a light-gated channel',p:'Georg Nagel, Ernst Bamberg, Peter Hegemann',d:'Chop1 expressed in Xenopus oocytes gives inward proton currents under green light. A truncated 7-transmembrane core is enough, so the protein itself is the channel. It is renamed channelrhodopsin-1.',c:'Nagel et al. (2002) Science 296:2395',s:['N'],k:'ChR1',r:0},
+ {l:'algae',y:2003,t:'Rhodopsins sit in the eyespot',p:'Tetsuo Takahashi et al.',d:'Immunofluorescence places the proteins in the algal eyespot, the origin of the photocurrents.',c:'Suzuki et al. (2003) BBRC 301:711',s:['N']},
+ {l:'chr',y:2003,m:11,t:'Channelrhodopsin-2: a cation channel',p:'Nagel, Hegemann, Bamberg et al.',d:'ChR2 is a blue-light-gated, non-selective cation channel that works in oocytes and human cells. The first 315 amino acids are enough. Its current peaks and then settles to a plateau.',c:'Nagel et al. (2003) PNAS 100:13940',s:['N'],k:'ChR2',r:1},
+ {l:'chr',y:2004,m:2,t:'ChR2 works in retinal neurons (unpublished)',p:'Zhuo-Hua Pan, Wayne State University',d:'Pan expresses ChR2 in cultured retinal ganglion cells, which respond to light. His NIH grant review calls the idea “bordering on the unknown”. He waits to publish until he has it working in a living animal.',c:'Vlasits, STAT (2016)',s:['S']},
+ {l:'pre',y:2004,m:11,t:'Photoswitchable tethered ligands',p:'Matthew Banghart, Ehud Isacoff, Dirk Trauner, Richard Kramer',d:'A Shaker K⁺ channel is engineered to accept a synthetic azobenzene photoswitch. Fast and reversible, but it needs a synthetic chemical.',c:'Banghart et al. (2004) Nat Neurosci 7:1381',s:['N']},
+ {l:'chr',y:2004,m:8,t:'Stanford records ChR2 in a neuron',p:'Ed Boyden, Karl Deisseroth (with Nagel’s DNA)',d:'Deisseroth contacted Nagel in March 2004. In August Boyden records light-driven currents in a cultured hippocampal neuron.',c:'Vlasits, STAT (2016); Boyden (2011) F1000 Biol Rep',s:['S','N']},
+ {l:'chr',y:2004,m:11,t:'Pan submits to Nature',p:'Pan, Alexander Dizhoor',d:'Submitted 25 November 2004 after ChR2-GFP was expressed in living rat retina. It was redirected to Nature Neuroscience and rejected, then rejected by the Journal of Neuroscience in early 2005.',c:'Vlasits, STAT (2016)',s:['S']},
+ {l:'pre',y:2005,m:4,t:'P2X2 with caged ATP in flies',p:'Susana Lima, Gero Miesenböck',d:'Light releases ATP that opens P2X2 channels in Drosophila command neurons and triggers escape. It depends on a co-injected caged ligand.',c:'Lima & Miesenböck (2005) Cell 121:141',s:['N']},
+ {l:'chr',y:2005,m:5,t:'Pan’s 15-minute ARVO talk',p:'Zhuo-Hua Pan',d:'At the ARVO meeting in Fort Lauderdale Pan presents ChR2 in neurons. The published abstract later held up the Stanford patent.',c:'Vlasits, STAT (2016)',s:['S']},
+ {l:'chr',y:2005,m:8,t:'Millisecond control of neurons',p:'Boyden, Zhang, Bamberg, Nagel, Deisseroth',d:'Blue-light pulses fire precisely timed action potentials in hippocampal neurons. Nagel noticed that the cells’ own retinal was enough, so no chemical had to be added. This is generally counted as the birth of optogenetics.',c:'Boyden et al. (2005) Nat Neurosci 8:1263',s:['N','S'],k:'Neurons',r:2},
+ {l:'chr',y:2005,m:11,t:'Spinal cord and C. elegans',p:'Herlitze & Landmesser lab; Nagel & Gottschalk',d:'Independent studies show ChR2 control in hippocampal neurons and embryonic chick spinal cord (Li et al.). In worms, light triggers fast behavioural responses (Nagel et al.).',c:'Li et al. (2005) PNAS 102:17816; Nagel et al. (2005) Curr Biol 15:2279',s:['N']},
+ {l:'chr',y:2006,m:3,t:'Tohoku and fruit-fly studies',p:'Hiromu Yawo lab; Schroll et al.',d:'ChR2 kinetics in engineered neurons, and light-triggered learning in Drosophila larvae.',c:'Ishizuka et al. (2006) Neurosci Res 54:85; Schroll et al. (2006) Curr Biol 16:1741',s:['N']},
+ {l:'pre',y:2006,t:'Light-gated glutamate receptor',p:'Volgraf, Isacoff, Trauner, Kramer',d:'The photoswitch principle is extended to ionotropic glutamate receptors (LiGluR), later used in vivo (Szobota et al. 2007).',c:'Volgraf et al. (2006) Nat Chem Biol 2:47',s:['N']},
+ {l:'chr',y:2006,m:10,t:'In vivo delivery by virus',p:'Zhang, Wang, Boyden, Deisseroth',d:'Without any need for added retinal, ChR2 moves into intact tissue through viral vectors.',c:'Zhang et al. (2006) Nat Methods 3:785',s:['N']},
+ {l:'chr',y:2006,m:11,t:'“Optogenetics” is named',p:'Deisseroth, Feng, Majewska, Miesenböck, Ting, Schnitzer',d:'A review in the Journal of Neuroscience coins the term for genetically targeted optical control.',c:'Deisseroth et al. (2006) J Neurosci 26:10380',s:['N'],k:'“Optogenetics”',r:0},
+ {l:'clin',y:2006,m:4,t:'Blind mice regain light responses',p:'Bi, Cui, Ma, Olshevskaya, Pu, Dizhoor, Pan',d:'An AAV vector puts ChR2 into retinal ganglion cells of mice with photoreceptor degeneration. Light signals reach the visual cortex again. This was Pan’s paper, published after two rejections.',c:'Bi et al. (2006) Neuron 50:23',s:['N','S']},
+ {l:'chr',y:2007,m:9,t:'Optical fibres reach deep brain',p:'Aravanis, Deisseroth et al.',d:'Laser diodes coupled to optical fibres drive ChR2 in layer-5 motor cortex of living rodents and move their whiskers.',c:'Aravanis et al. (2007) J Neural Eng 4:S143',s:['N']},
+ {l:'tool',y:2007,m:4,t:'Halorhodopsin silences neurons',p:'Feng Zhang & Deisseroth; Xue Han & Boyden',d:'Yellow light drives NpHR to pump chloride in and silence firing. Its spectrum is separate from blue ChR2, which makes two-colour, two-way control possible.',c:'Zhang et al. (2007) Nature 446:633; Han & Boyden (2007) PLoS ONE 2:e299',s:['N'],k:'NpHR',r:1},
+ {l:'tool',y:2007,m:3,t:'DREADDs: chemogenetics',p:'Bryan Roth lab',d:'Engineered receptors that only a designer drug activates. Slower than optogenetics, and well suited to long-lasting, widespread modulation.',c:'Armbruster et al. (2007) PNAS 104:5163',s:['N']},
+ {l:'circ',y:2007,m:11,t:'Neurons that wake you up',p:'Adamantidis, Zhang, Aravanis, Deisseroth, de Lecea',d:'Stimulating hypocretin/orexin neurons in the lateral hypothalamus makes waking from sleep more likely, and the effect depends on stimulation frequency. One of the first causal links from a cell population to a mammalian behaviour.',c:'Adamantidis et al. (2007) Nature 450:420',s:['N']},
+ {l:'tool',y:2010,t:'eNpHR3.0 and proton-pump silencers',p:'Gradinaru et al.; Chow, Han, Boyden et al.',d:'Stronger chloride pumps and outward proton pumps (Arch) for silencing. Pumps still move only one ion per photon.',c:'Gradinaru et al. (2010); Chow et al. (2010) Nature 463:98',s:['N']},
+ {l:'clin',y:2010,t:'ChR2 in primate retina',p:'Ivanova, Hwang, Pan, Troilo',d:'AAV-delivered Chop2-GFP is expressed in surviving retinal cells of marmoset monkeys.',c:'Ivanova et al. (2010) IOVS 51:5288',s:['N']},
+ {l:'circ',y:2011,t:'Amygdala projections control anxiety',p:'Kay Tye, Deisseroth et al.; Stuber et al.',d:'Activating basolateral-to-central amygdala projections reduces anxiety, and amygdala inputs to the nucleus accumbens promote reward seeking.',c:'Tye et al. (2011) Nature 471:358; Stuber et al. (2011) Nature 475:377',s:['N']},
+ {l:'circ',y:2011,m:2,t:'An aggression locus',p:'Dayu Lin, David Anderson et al.',d:'Stimulating the ventrolateral ventromedial hypothalamus triggers attack.',c:'Lin et al. (2011) Nature 470:221',s:['N']},
+ {l:'circ',y:2012,m:3,t:'Activating a memory engram',p:'Xu Liu, Steve Ramirez, Susumu Tonegawa et al.',d:'ChR2 is placed only in dentate gyrus cells active during fear learning. Lighting them later, in a neutral place, makes the mouse freeze. Reactivating those cells is enough to recall the memory.',c:'Liu et al. (2012) Nature 484:381',s:['N'],k:'Engram',r:2},
+ {l:'circ',y:2012,m:11,t:'Reward or aversion by input',p:'Stephan Lammel, Robert Malenka, Deisseroth et al.',d:'In the ventral tegmental area, inputs from the laterodorsal tegmentum drive reward, while inputs from the lateral habenula drive aversion.',c:'Lammel et al. (2012) Nature 491:212',s:['N']},
+ {l:'circ',y:2013,m:7,t:'Implanting a false memory',p:'Ramirez, Liu, Tonegawa et al.',d:'Cells that encoded a safe place are reactivated during fear conditioning elsewhere. The mice later freeze in the safe place.',c:'Ramirez et al. (2013) Science 341:387',s:['N']},
+ {l:'circ',y:2013,m:4,t:'BNST pathways build anxiety',p:'Sung-Yon Kim, Deisseroth et al.; Felix-Ortiz et al.',d:'Separate BNST outputs control risk avoidance (to the lateral hypothalamus) and positive valence (to the VTA). Amygdala projections to the ventral hippocampus increase anxiety.',c:'Kim et al. (2013) Nature 496:219; Felix-Ortiz et al. (2013) Neuron 79:658',s:['N']},
+ {l:'cred',y:2013,m:3,t:'The Brain Prize',p:'Bamberg, Boyden, Deisseroth, Hegemann, Miesenböck, Nagel',d:'€1 million shared among six optogenetics pioneers. Pan is not among them.',c:'Vlasits, STAT (2016)',s:['S'],k:'Brain Prize',r:0},
+ {l:'tool',y:2014,m:4,t:'Channelrhodopsins re-engineered to pass chloride',p:'Berndt & Deisseroth; Wietek & Hegemann',d:'Structure-guided mutations turn ChR into light-gated chloride channels for inhibition.',c:'Berndt et al. (2014) Science 344:420; Wietek et al. (2014) Science 344:409',s:['N']},
+ {l:'tool',y:2014,m:2,t:'Chrimson: a red-shifted ChR',p:'Klapoetke, Boyden et al.',d:'A channelrhodopsin driven by orange-red light. In 2021 it was the opsin used in the first patient with partly restored vision.',c:'Klapoetke et al. (2014) Nat Methods 11:338',s:['W','N']},
+ {l:'circ',y:2014,m:5,t:'Social, mating, attack on a dial',p:'Hyosang Lee, David Anderson et al.',d:'Stimulating Esr1⁺ VMHvl neurons at increasing strength moves behaviour from social investigation to mounting to attack.',c:'Lee et al. (2014) Nature 509:627',s:['N']},
+ {l:'tool',y:2015,m:8,t:'Natural anion channelrhodopsins',p:'Elena Govorunova, John Spudich et al.',d:'GtACR1 and GtACR2 from the alga Guillardia theta conduct chloride passively. They are far more light-sensitive than pumps, which made silencing much more efficient.',c:'Govorunova et al. (2015) Science 349:647',s:['N']},
+ {l:'cred',y:2015,m:11,t:'Breakthrough Prize',p:'Boyden, Deisseroth',d:'US$3 million each to Boyden and Deisseroth (the 2016 Breakthrough Prize in Life Sciences).',c:'Vlasits, STAT (2016)',s:['S']},
+ {l:'cred',y:2016,m:3,t:'Stanford patent issued after a decade',p:'Boyden, Deisseroth',d:'The US patent office rejected it several times because Pan’s 2005 abstract was published more than a year before filing. The inventors declared they had done the work privately before the abstract appeared.',c:'Vlasits, STAT (2016)',s:['S']},
+ {l:'clin',y:2016,t:'First optogenetics trial in humans',p:'RetroSense (licensing Pan’s patent)',d:'Algal opsin genes go into the eyes of blind patients in Texas. It is the first human optogenetics trial and the first gene therapy with a non-human gene.',c:'Vlasits, STAT (2016)',s:['S'],k:'First human',r:1},
+ {l:'cred',y:2016,m:9,t:'“You’ve never heard of him”',p:'Anna Vlasits, STAT / Scientific American',d:'A report on Pan’s priority, peer-review delays and the case for preprints.',c:'Vlasits (2016) STAT; Sci Am 6 Sep 2016',s:['S']},
+ {l:'circ',y:2018,t:'Parenting broken into modules',p:'Johannes Kohl, Catherine Dulac et al.',d:'Galanin neurons in the medial preoptic area form separate projection pools for pup grooming, the motivation to seek pups and social interaction.',c:'Kohl et al. (2018) Nature 556:326',s:['N']},
+ {l:'circ',y:2018,m:1,t:'Midbrain circuits set speed and gait',p:'Caggiano, Kiehn et al.',d:'Populations in the mesencephalic locomotor region independently set locomotor speed and gait. Later work extended this to body extension and forelimb movements (Ferreira-Pinto et al. 2021).',c:'Caggiano et al. (2018) Nature 553:455',s:['N']},
+ {l:'cred',y:2021,m:9,t:'Lasker Basic Medical Research Award',p:'Deisseroth, Hegemann, Oesterhelt',d:'For light-sensitive microbial proteins and their use in optogenetics.',c:'Lasker Foundation (2021)',s:['W']},
+ {l:'clin',y:2021,m:2,t:'Chrimson in macaque retina',p:'Gauvain et al.',d:'A red-shifted ChR gives strong light responses in primate retinal ganglion cells.',c:'Gauvain et al. (2021) Commun Biol 4:125',s:['N']},
+ {l:'clin',y:2021,m:5,t:'A blind patient sees objects',p:'José-Alain Sahel, Botond Roska et al.',d:'A patient with retinitis pigmentosa receives Chrimson in retinal ganglion cells. With light-projecting goggles he can locate high-contrast objects on a table, with matching activity in the visual cortex.',c:'Sahel et al. (2021) Nat Med 27:1223',s:['N'],k:'Vision',r:0},
+ {l:'cred',y:2026,m:10,t:'Nobel Prize in Physiology or Medicine',p:'Karl Deisseroth, Peter Hegemann, Georg Nagel',d:'The Nobel Committee’s background calls the discovery of channelrhodopsins as light-gated ion channels the pivotal moment that gave neuroscience a millisecond switch. It places it alongside Golgi staining and the patch clamp as methods that changed neuroscience.',c:'Nobel Committee (2026) Scientific background: Optogenetics',s:['N'],k:'Nobel',r:1},
+];
+EV.forEach(e=>e.x0=e.y+(e.m?(e.m-.5)/12:.5));
+EV.sort((a,b)=>a.x0-b.x0);
+EV.forEach((e,i)=>e.i=i);
+const laneOf=id=>LANES.find(l=>l.id===id);
+
+/* ---------------- TIMELINE ---------------- */
+(function timeline(){
+  const svg=$('#tl'), lab=$('#tlLabels'), scroller=$('#tlScroll');
+  const on=new Set(LANES.map(l=>l.id)); let sel=EV.findIndex(e=>e.k==='Neurons'); let playT=null; let layout=null;
+  const fil=$('#filters');
+  LANES.forEach(l=>{const b=document.createElement('button');b.className='chip';b.setAttribute('aria-pressed','true');b.innerHTML=`<i style="background:var(${l.col})"></i>${l.name}`;b.onclick=()=>{if(on.has(l.id)){if(on.size>1)on.delete(l.id)}else on.add(l.id);b.setAttribute('aria-pressed',on.has(l.id));stop();render();
+    if(!on.has(EV[sel].l)){const v=visible();if(v.length)sel=v[0].i;}detail()};fil.appendChild(b)});
+  const visible=()=>EV.filter(e=>on.has(e.l));
+  const SEG=[[1860,1970,0,.14],[1970,2000,.14,.40],[2000,2027,.40,1]];
+  function render(){
+    const narrow=innerWidth<640, LW=narrow?78:150;
+    const W=Math.max(scroller.clientWidth, narrow?1100:1500), PL=24, PR=30, TOP=92;
+    const sx=y=>{for(const [a,b,f0,f1] of SEG){if(y<=b)return PL+((y-a)/(b-a)*(f1-f0)+f0)*(W-PL-PR)}return W-PR};
+    // sub-rows
+    let y=TOP; const lanes=[];
+    for(const l of LANES){
+      const evs=EV.filter(e=>e.l===l.id); const rows=[];
+      evs.forEach(e=>{e.x=sx(e.x0); let r=rows.findIndex(last=>e.x-last>=15); if(r<0){r=rows.length;rows.push(e.x)}else rows[r]=e.x; e.sub=r});
+      const nr=Math.max(1,rows.length), h=nr*16+22; lanes.push({l,y,h,nr}); evs.forEach(e=>e.cy=y+11+e.sub*16+8); y+=h;
+    }
+    const H=y+28; layout={sx,W};
+    let s=`<svg xmlns="http://www.w3.org/2000/svg">`;
+    // segment shading
+    SEG.forEach(([a,b],i)=>{ if(i%2===1) s+=`<rect x="${sx(a)}" y="${TOP-6}" width="${sx(b)-sx(a)}" height="${H-TOP-22}" style="fill:var(--line-soft);opacity:.35"/>`});
+    // lanes
+    lanes.forEach((L,i)=>{ s+=`<line x1="0" x2="${W}" y1="${L.y+L.h}" y2="${L.y+L.h}" style="stroke:var(--line-soft)"/>`; });
+    // ticks
+    const ticks=[1866,1900,1940,1970,1980,1990,2000,2005,2010,2015,2020,2026];
+    ticks.forEach(t=>{const x=sx(t+.5);s+=`<line x1="${x}" x2="${x}" y1="${TOP-6}" y2="${H-22}" style="stroke:var(--line);stroke-dasharray:2 4"/><text x="${x}" y="${H-7}" text-anchor="middle" style="fill:var(--muted);font:11px var(--f-mono)">${t}</text>`});
+    s+=`<text x="${sx(1915)}" y="${TOP+4}" text-anchor="middle" style="fill:var(--faint);font:italic 12px var(--f-display)">a century of quiet algae watching</text>`;
+    // milestones
+    EV.filter(e=>e.k).forEach(e=>{const ly=18+e.r*22; const vis=on.has(e.l); s+=`<g style="opacity:${vis?1:.25}"><line x1="${e.x}" x2="${e.x}" y1="${ly+5}" y2="${e.cy}" style="stroke:var(${laneOf(e.l).col});stroke-width:1;opacity:.5"/><text x="${e.x}" y="${ly}" text-anchor="middle" style="fill:var(--fg);font:500 11.5px var(--f-body)">${esc(e.k)}</text></g>`});
+    // events
+    EV.forEach(e=>{const vis=on.has(e.l), c=laneOf(e.l).col, isSel=e.i===sel;
+      s+=`<g class="ev" data-i="${e.i}" tabindex="-1" style="opacity:${vis?1:.12}">`+
+      (isSel?`<circle cx="${e.x}" cy="${e.cy}" r="12" style="fill:none;stroke:var(${c});stroke-width:2"/>`:'')+
+      `<circle class="dot" cx="${e.x}" cy="${e.cy}" r="${e.k?7:5.5}" style="fill:var(${c});stroke:var(--surface);stroke-width:${e.k?2:1.5}"/></g>`});
+    s+='</svg>';
+    svg.setAttribute('width',W); svg.setAttribute('height',H); svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.innerHTML=s.replace(/^<svg[^>]*>|<\/svg>$/g,'');
+    lab.setAttribute('width',LW); lab.setAttribute('height',H); lab.setAttribute('viewBox',`0 0 ${LW} ${H}`);
+    let ls=''; lanes.forEach(L=>{ls+=`<line x1="0" x2="${LW}" y1="${L.y+L.h}" y2="${L.y+L.h}" style="stroke:var(--line-soft)"/><circle cx="14" cy="${L.y+L.h/2}" r="4" style="fill:var(${L.l.col});opacity:${on.has(L.l.id)?1:.25}"/><text x="24" y="${L.y+L.h/2+4}" style="fill:var(${on.has(L.l.id)?'--fg':'--faint'});font:500 ${narrow?10.5:12}px var(--f-body)">${esc(narrow?L.l.short:L.l.name)}</text>`});
+    ls+=`<text x="12" y="${TOP-30}" style="fill:var(--muted);font:500 10px var(--f-mono);letter-spacing:.1em">MILESTONES</text>`;
+    lab.innerHTML=ls;
+    svg.querySelectorAll('.ev').forEach(g=>{const e=EV[+g.dataset.i];
+      g.addEventListener('click',()=>{stop();select(e.i,false)});
+      g.addEventListener('pointermove',ev=>showTip(ev,`<b>${esc(e.t)}</b><span>${e.m?MON[e.m-1]+' ':''}${e.y} · ${esc(laneOf(e.l).name)}</span>`));
+      g.addEventListener('pointerleave',hideTip)});
+    $('#evCount').textContent=`${visible().length} events shown`;
+  }
+  function detail(){
+    const e=EV[sel], L=laneOf(e.l), d=$('#detail');
+    d.style.setProperty('--lane',`var(${L.col})`);
+    d.innerHTML=`<div><div class="yr">${e.y}</div><div class="mo">${e.m?MON[e.m-1]:'&nbsp;'}</div><div class="lane-tag" style="margin-top:14px"><i style="background:var(${L.col})"></i>${esc(L.name)}</div></div>
+      <div style="min-width:0"><h3>${esc(e.t)}</h3><div class="who">${esc(e.p)}</div><p class="body">${esc(e.d)}</p><div class="cite">${esc(e.c)}</div><div class="badges">${e.s.map(k=>`<span class="badge">${SRC[k]}</span>`).join('')}</div></div>`;
+  }
+  function select(i,scroll=true){ sel=i; render(); detail(); const e=EV[i];
+    const target=e.x-scroller.clientWidth/2; if(scroll||e.x<scroller.scrollLeft+20||e.x>scroller.scrollLeft+scroller.clientWidth-20) scroller.scrollTo({left:target,behavior:reduce?'auto':'smooth'}); }
+  function stepBy(d){const v=visible(); let k=v.findIndex(e=>e.i===sel); if(k<0)k=0; k=Math.max(0,Math.min(v.length-1,k+d)); select(v[k].i)}
+  $('#prevEv').onclick=()=>{stop();stepBy(-1)}; $('#nextEv').onclick=()=>{stop();stepBy(1)};
+  document.addEventListener('keydown',ev=>{ if(ev.target.matches('input,textarea'))return; const r=$('#timeline').getBoundingClientRect(); if(r.top>innerHeight*.6||r.bottom<innerHeight*.3)return;
+    if(ev.key==='ArrowRight'){ev.preventDefault();stop();stepBy(1)} if(ev.key==='ArrowLeft'){ev.preventDefault();stop();stepBy(-1)} });
+  const playBtn=$('#playEv');
+  function stop(){ if(playT){clearInterval(playT);playT=null;playBtn.textContent='▶ Play the milestones'} }
+  playBtn.onclick=()=>{ if(playT){stop();return}
+    const ms=EV.filter(e=>e.k&&on.has(e.l)); if(!ms.length)return; let k=ms.findIndex(e=>e.i>sel); if(k<0)k=0;
+    select(ms[k].i); playBtn.textContent='❚❚ Pause';
+    playT=setInterval(()=>{k++; if(k>=ms.length){stop();return} select(ms[k].i)},3800) };
+  let rT; addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(render,120)});
+  render(); detail(); requestAnimationFrame(()=>{scroller.scrollLeft=EV[sel].x-scroller.clientWidth/2});
+})();
+
+/* ---------------- RACE ---------------- */
+(function race(){
+  const svg=$('#raceSvg'); const X0=210,X1=930; const mx=m=>X0+(m)/36*(X1-X0); // m = months since Jan 2004 (0=Jan start)
+  const M=(y,mo,f=.5)=>(y-2004)*12+(mo-1)+f;
+  const rows=[
+    {y:70,name:'Zhuo-Hua Pan',org:'Wayne State · retina',ev:[
+      {m:M(2004,2),k:'lab',t:'ChR2 drives light responses in cultured retinal ganglion cells'},
+      {m:M(2004,7),k:'step',t:'First rat dosed with ChR2-GFP virus; ~5 weeks later retinas glow green and respond to light'},
+      {m:M(2004,11,.8),k:'step',t:'Submitted to Nature, 25 Nov 2004'},
+      {m:M(2004,12),k:'rej',t:'~ Redirected to Nature Neuroscience, rejected',a:1},
+      {m:M(2005,2),k:'rej',t:'~ Early 2005: reviewed and rejected by the Journal of Neuroscience',a:1},
+      {m:M(2005,5),k:'talk',t:'15-minute talk at ARVO, Fort Lauderdale (May 2005)'},
+      {m:M(2006,4),k:'pub',t:'Bi et al., Neuron 50:23 (April 2006)'}],gap:[M(2004,2),M(2006,4)]},
+    {y:155,name:'Boyden & Deisseroth',org:'Stanford · hippocampus',ev:[
+      {m:M(2004,3),k:'step',t:'Deisseroth contacts Georg Nagel and asks for ChR2 DNA (March 2004)'},
+      {m:M(2004,8),k:'lab',t:'Boyden records light-evoked activity from a cultured neuron (August 2004)'},
+      {m:M(2005,8),k:'pub',t:'Boyden et al., Nature Neuroscience 8:1263 (August 2005)'}],gap:[M(2004,8),M(2005,8)]},
+    {y:220,name:'Herlitze & Landmesser',org:'Case Western · spinal cord',ev:[{m:M(2005,11),k:'pub',t:'~ Li et al., PNAS 102:17816 (late 2005)',a:1}]},
+    {y:265,name:'Nagel & Gottschalk',org:'Frankfurt · C. elegans',ev:[{m:M(2005,12),k:'pub',t:'~ Nagel et al., Current Biology 15:2279 (December 2005)',a:1}]},
+    {y:310,name:'Hiromu Yawo',org:'Tohoku · neurons',ev:[{m:M(2006,1,.9),k:'pub',t:'~ Ishizuka et al., Neurosci Res 54:85 (early 2006)',a:1}]},
+  ];
+  let s='';
+  for(let i=0;i<=36;i++){const x=mx(i); const yr=i%12===0; if(i<36||yr){ s+=`<line x1="${x}" x2="${x}" y1="34" y2="330" style="stroke:var(${yr?'--line':'--line-soft'});${yr?'':'stroke-dasharray:1 5'}"/>`}
+    if(yr&&i<36) s+=`<text x="${x+6}" y="26" style="fill:var(--fg);font:500 13px var(--f-mono)">${2004+i/12}</text>`;
+    else if(i<36 && i%3===0) s+=`<text x="${x+3}" y="26" style="fill:var(--faint);font:10px var(--f-mono)">${MON[i%12]}</text>`}
+  // Aug 2005 line
+  const xa=mx(M(2005,8)); s+=`<line x1="${xa}" x2="${xa}" y1="34" y2="334" style="stroke:var(--l470);stroke-width:1.5;stroke-dasharray:4 3"/><text x="${xa+6}" y="350" style="fill:var(--l470);font:500 11px var(--f-mono)">first peer-reviewed paper · Aug 2005</text>`;
+  rows.forEach(r=>{
+    s+=`<text x="12" y="${r.y-2}" style="fill:var(--fg);font:600 13px var(--f-body)">${r.name}</text><text x="12" y="${r.y+14}" style="fill:var(--muted);font:11px var(--f-body)">${r.org}</text>`;
+    if(r.gap){const a=mx(r.gap[0]),b=mx(r.gap[1]),mo=Math.round(r.gap[1]-r.gap[0]);
+      s+=`<line x1="${a}" x2="${b}" y1="${r.y}" y2="${r.y}" style="stroke:var(--l470);stroke-width:6;opacity:.22;stroke-linecap:round"/>`+
+      `<text x="${(a+b)/2}" y="${r.y+26}" text-anchor="middle" style="fill:var(--muted);font:500 11px var(--f-mono)">${mo} months from lab to print</text>`}
+    r.ev.forEach(e=>{const x=mx(e.m), y=r.y; let g='';
+      if(e.k==='lab') g=`<circle cx="${x}" cy="${y}" r="7" style="fill:var(--l470)"/>`;
+      else if(e.k==='pub') g=`<rect x="${x-6.5}" y="${y-6.5}" width="13" height="13" style="fill:var(--fg)"/>`;
+      else if(e.k==='rej') g=`<path d="M${x-5} ${y-5} L${x+5} ${y+5} M${x+5} ${y-5} L${x-5} ${y+5}" style="stroke:var(--bad);stroke-width:2.4"/>`;
+      else if(e.k==='talk') g=`<path d="M${x} ${y-8} L${x+7} ${y+6} L${x-7} ${y+6}Z" style="fill:var(--l589)"/>`;
+      else g=`<circle cx="${x}" cy="${y}" r="5" style="fill:var(--surface);stroke:var(--muted);stroke-width:1.6"/>`;
+      s+=`<g class="rv" data-t="${esc(e.t)}" style="cursor:help"><circle cx="${x}" cy="${y}" r="13" style="fill:transparent"/>${g}${e.a?`<text x="${x}" y="${y-12}" text-anchor="middle" style="fill:var(--faint);font:11px var(--f-mono)">~</text>`:''}</g>`});
+  });
+  // patent annotation
+  s+=`<text x="${mx(M(2005,5))}" y="${70-18}" text-anchor="middle" style="fill:var(--l589);font:10.5px var(--f-mono)">abstract later blocks Stanford patent</text>`;
+  svg.innerHTML=s;
+  svg.querySelectorAll('.rv').forEach(g=>{g.addEventListener('pointermove',ev=>showTip(ev,`<b>${g.dataset.t}</b>`));g.addEventListener('pointerleave',hideTip)});
+})();
+
+/* ---------------- SWITCH LAB ---------------- */
+const OPS=[
+ {id:'chr2',name:'ChR2',full:'Channelrhodopsin-2',nm:470,ex:true,kind:'cation channel',org:'Chlamydomonas reinhardtii',ref:'Nagel et al. 2003 · Boyden et al. 2005',g:2.2,E:0,ton:1,toff:10,info:'Light opens the channel and Na⁺, K⁺, H⁺ and Ca²⁺ flow passively down their gradients, depolarising the cell. Fast closing (~10 ms) lets it follow pulse trains at tens of hertz before spikes start to fail.'},
+ {id:'chrimson',name:'Chrimson',full:'Red-shifted channelrhodopsin',nm:590,ex:true,kind:'cation channel',org:'Chlamydomonas noctigama',ref:'Klapoetke et al. 2014 · Sahel et al. 2021',g:1.5,E:0,ton:1.5,toff:24,info:'Responds to orange-red light, which travels further through tissue and is gentler on the eye. It was used in the first patient with partly restored vision. Slower closing limits how fast it can drive spikes.'},
+ {id:'chr1',name:'ChR1',full:'Channelrhodopsin-1',nm:500,ex:true,kind:'proton channel',org:'Chlamydomonas reinhardtii',ref:'Nagel et al. 2002',g:.8,E:0,ton:1.5,toff:12,info:'The first light-gated channel described, carrying mainly protons under green light. Its small currents in this model rarely reach threshold, which is why ChR2 became the workhorse.'},
+ {id:'nphr',name:'NpHR',full:'Halorhodopsin',nm:589,ex:false,kind:'chloride pump',org:'Natronomonas pharaonis',ref:'Zhang et al. 2007 · Han & Boyden 2007',pump:-27,ton:2,toff:4,info:'A pump that moves one Cl⁻ ion into the cell for each photon absorbed, hyperpolarising it. Yellow light keeps it separate from blue ChR2, which allows two-colour experiments.'},
+ {id:'arch',name:'Arch',full:'Archaerhodopsin-3',nm:566,ex:false,kind:'outward proton pump',org:'Halorubrum sodomense',ref:'Chow et al. 2010',pump:-31,ton:2,toff:4,info:'Pumps protons out of the cell under yellow-green light. A strong silencer, but still limited to one ion per photon.'},
+ {id:'gtacr',name:'GtACR1',full:'Anion channelrhodopsin',nm:515,ex:false,kind:'chloride channel',org:'Guillardia theta',ref:'Govorunova et al. 2015',g:5,E:-72,ton:1,toff:30,info:'A natural light-gated chloride channel. Many ions pass per photon, so it needs far less light than pumps. It clamps the membrane near the chloride reversal potential and stops firing.'},
+];
+function nmRGB(w){let r=0,g=0,b=0; if(w<440){r=-(w-440)/60;b=1}else if(w<490){g=(w-440)/50;b=1}else if(w<510){g=1;b=-(w-510)/20}else if(w<580){r=(w-510)/70;g=1}else if(w<645){r=1;g=-(w-645)/65}else{r=1}
+  let f=w<420?.3+.7*(w-380)/40:w>700?.3+.7*(780-w)/80:1; const c=v=>Math.round(255*Math.pow(v*f,.8)); return `rgb(${c(r)},${c(g)},${c(b)})`}
+(function lab(){
+  let op=OPS[0], f=10, pw=5, sim=null, t0=performance.now();
+  const box=$('#opsins');
+  OPS.forEach(o=>{const b=document.createElement('button');b.className='opsin';b.style.setProperty('--sel',nmRGB(o.nm));b.setAttribute('aria-pressed',o===op);
+    b.innerHTML=`<span class="sw" style="background:${nmRGB(o.nm)}"></span><span><b>${o.name}</b><small>${o.kind} · ${o.ex?'excites':'silences'}</small></span><span class="nm">~${o.nm} nm</span>`;
+    b.onclick=()=>{op=o;box.querySelectorAll('.opsin').forEach((x,i)=>x.setAttribute('aria-pressed',OPS[i]===o));update()};box.appendChild(b)});
+  const fr=$('#freq'), pr=$('#pw');
+  fr.oninput=()=>{f=+fr.value;$('#freqOut').textContent=f+' Hz';update()};
+  pr.oninput=()=>{pw=+pr.value;$('#pwOut').textContent=pw+' ms';update()};
+  function randn(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(6.283*v)}
+  function simulate(o,f,pw,noise=1.4){
+    const dt=.1,T=1000,n=T/dt, V=new Float32Array(n), L=new Uint8Array(n); const spikes=[], pulses=[];
+    let v=-70, g=0, av=1, ahp=0, ref=0; const drive=o.ex?6:24;
+    for(let i=0;i<n;i++){const t=i*dt; let lit=0;
+      if(o.ex){ if(t>=100&&t<900){const per=1000/f, k=Math.floor((t-100)/per), ph=t-100-k*per; if(ph<pw){lit=1; if(pulses.length<=k) pulses.push(t)}} }
+      else { if(t>=350&&t<700) lit=1 }
+      L[i]=lit;
+      g+=(lit-g)*dt/(lit?o.ton:o.toff);
+      if(o.ex) av+=(lit?-av*g/40:(1-av)/400)*dt;   // ChR desensitization: peak current decays to a plateau
+      ahp*=Math.exp(-dt/25);
+      const Iop=o.pump? o.pump*g : o.g*g*av*(o.E-v);
+      if(ref>0){ref-=dt; V[i]=-72; continue}
+      v+=dt*(-(v+70)+drive+Iop-ahp*(v+90))/20 + noise*Math.sqrt(dt)*randn()*.6;
+      if(v>=-50){V[i]=30; spikes.push(t); v=-72; ref=2.5; ahp+=.7} else V[i]=v;
+    }
+    return {V,L,spikes,pulses,dt};
+  }
+  function stats(s,o){
+    if(o.ex){ let hit=0; const per=1000/f; s.pulses.forEach(p=>{if(s.spikes.some(t=>t>=p&&t<p+Math.min(per,20)))hit++});
+      return [[s.pulses.length,'light pulses'],[s.spikes.filter(t=>t>=100&&t<900).length,'spikes in train'],[Math.round(100*hit/Math.max(1,s.pulses.length))+'%','pulses followed by a spike']]; }
+    const rate=(a,b)=>Math.round(s.spikes.filter(t=>t>=a&&t<b).length/((b-a)/1000));
+    return [[rate(0,350)+' Hz','before light'],[rate(350,700)+' Hz','during light'],[rate(700,1000)+' Hz','after light']];
+  }
+  const cv=$('#scope'), ctx=cv.getContext('2d');
+  function size(){const d=Math.min(devicePixelRatio||1,2);cv.width=cv.clientWidth*d;cv.height=cv.clientHeight*d;ctx.setTransform(d,0,0,d,0,0)}
+  size(); addEventListener('resize',()=>{size();draw(1)});
+  function draw(p){
+    const W=cv.clientWidth,H=cv.clientHeight; ctx.clearRect(0,0,W,H); if(!sim)return;
+    const top=34, lightY=H-26, vy=v=>top+(40-v)/(40+85)*(lightY-14-top); const n=sim.V.length, xs=i=>10+i/n*(W-20);
+    ctx.strokeStyle=cssv('--line-soft'); ctx.lineWidth=1; ctx.font='10px "IBM Plex Mono", monospace'; ctx.fillStyle=cssv('--faint');
+    [-70,-50,0].forEach(v=>{ctx.beginPath();ctx.setLineDash(v===-50?[3,4]:[]);ctx.moveTo(10,vy(v));ctx.lineTo(W-10,vy(v));ctx.stroke();ctx.fillText((v===-50?'threshold ':'')+v+' mV',W-(v===-50?110:52),vy(v)-4)}); ctx.setLineDash([]);
+    // light bar
+    const col=nmRGB(op.nm); ctx.fillStyle=cssv('--line-soft'); ctx.fillRect(10,lightY,W-20,8); ctx.fillStyle=col;
+    let st=-1; for(let i=0;i<n;i++){ if(sim.L[i]&&st<0)st=i; if((!sim.L[i]||i===n-1)&&st>=0){ctx.fillRect(xs(st),lightY,Math.max(1,xs(i)-xs(st)),8); st=-1} }
+    ctx.fillStyle=cssv('--muted'); ctx.fillText(`light ${op.nm} nm`,10,H-6); ctx.fillText('1000 ms',W-58,H-6);
+    // trace
+    const upto=Math.floor(n*p); ctx.strokeStyle=cssv('--fg'); ctx.lineWidth=1.3; ctx.beginPath();
+    for(let i=0;i<upto;i++){const x=xs(i),y=vy(sim.V[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); if(sim.V[i]>0){ctx.lineTo(x,vy(sim.V[i]));} }
+    ctx.stroke();
+    // spike tops glow
+    ctx.fillStyle=col; sim.spikes.forEach(t=>{const i=Math.round(t/sim.dt); if(i<upto){ctx.beginPath();ctx.arc(xs(i),vy(30),2.2,0,7);ctx.fill()}});
+    if(p<1){ctx.strokeStyle=hexA(cssv('--l470'),.6);ctx.beginPath();ctx.moveTo(xs(upto),top-10);ctx.lineTo(xs(upto),lightY-4);ctx.stroke()}
+  }
+  function update(){
+    $('#freqCtl').style.opacity=$('#widthCtl').style.opacity=op.ex?1:.35; fr.disabled=pr.disabled=!op.ex;
+    sim=simulate(op,f,pw); t0=performance.now();
+    $('#readout').innerHTML=stats(sim,op).map(([v,k])=>`<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
+    $('#labInfo').innerHTML=`<b>${op.full}</b> · ${op.kind} from <i>${op.org}</i> · ${op.ref}. ${op.info}`;
+    $('#scopeTag').textContent=op.ex?`Membrane potential · ${f} Hz × ${pw} ms pulses`:'Membrane potential · tonically firing cell, light 350–700 ms';
+    spectrum(); mini(); if(reduce) draw(1);
+  }
+  function loop(now){ const p=Math.min(1,(now-t0)/1800); draw(p); if(now-t0>3200){sim=simulate(op,f,pw);t0=now;$('#readout').innerHTML=stats(sim,op).map(([v,k])=>`<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('')} requestAnimationFrame(loop) }
+  function spectrum(){
+    const x=nm=>20+(nm-400)/(700-400)*660; let s='<defs><linearGradient id="sg" x1="0" x2="1">';
+    for(let w=400;w<=700;w+=20)s+=`<stop offset="${(w-400)/300}" stop-color="${nmRGB(w)}"/>`; s+='</linearGradient></defs>';
+    s+=`<rect x="20" y="40" width="660" height="10" rx="3" fill="url(#sg)"/>`;
+    [400,450,500,550,600,650,700].forEach(w=>s+=`<text x="${x(w)}" y="66" text-anchor="middle" style="fill:var(--muted);font:10px var(--f-mono)">${w}</text>`);
+    s+=`<text x="680" y="84" text-anchor="end" style="fill:var(--faint);font:10px var(--f-mono)">wavelength, nm</text>`;
+    const placed=[]; OPS.forEach(o=>{const xx=x(o.nm); let row=0; while(placed.some(p=>p.r===row&&Math.abs(p.x-xx)<62))row++; placed.push({x:xx,r:row});
+      const a=o===op; const y=28-row*14; s+=`<line x1="${xx}" x2="${xx}" y1="${y+3}" y2="40" style="stroke:var(${a?'--fg':'--faint'});stroke-width:${a?1.5:1}"/><text x="${xx}" y="${y}" text-anchor="middle" style="fill:var(${a?'--fg':'--muted'});font:${a?600:400} 11px var(--f-body)">${o.name}</text>`});
+    $('#spec').innerHTML=s;
+  }
+  function mini(){
+    const el=$('#mini');
+    if(op.ex){ const fs=[5,10,15,20,25,30,40,50,60]; const pts=fs.map(F=>{const s=simulate(op,F,pw,0); let hit=0; const per=1000/F; s.pulses.forEach(p=>{if(s.spikes.some(t=>t>=p&&t<p+Math.min(per,20)))hit++}); return [F,hit/Math.max(1,s.pulses.length)]});
+      const X=F=>40+(F-5)/55*620, Y=v=>110-v*90; let s=`<svg viewBox="0 0 700 140" style="width:100%;height:auto" role="img" aria-label="Spike fidelity versus pulse rate">`;
+      [0,.5,1].forEach(v=>s+=`<line x1="40" x2="660" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--line-soft)"/><text x="34" y="${Y(v)+4}" text-anchor="end" style="fill:var(--muted);font:10px var(--f-mono)">${v*100}%</text>`);
+      fs.forEach(F=>s+=`<text x="${X(F)}" y="128" text-anchor="middle" style="fill:var(--muted);font:10px var(--f-mono)">${F}</text>`);
+      s+=`<text x="660" y="140" text-anchor="end" style="fill:var(--faint);font:10px var(--f-mono)">pulse rate, Hz</text>`;
+      s+=`<path d="M${X(5)} ${Y(0)} `+pts.map(([F,v])=>`L${X(F)} ${Y(v)}`).join(' ')+` L${X(60)} ${Y(0)}Z" style="fill:${nmRGB(op.nm)};opacity:.15"/>`;
+      s+=`<polyline points="${pts.map(([F,v])=>`${X(F)},${Y(v)}`).join(' ')}" style="fill:none;stroke:${nmRGB(op.nm)};stroke-width:2.2"/>`;
+      pts.forEach(([F,v])=>s+=`<circle cx="${X(F)}" cy="${Y(v)}" r="${F===nearest(fs,f)?5:3}" style="fill:${nmRGB(op.nm)};stroke:var(--surface);stroke-width:1.5"/>`);
+      s+='</svg>'; el.innerHTML=`<div class="eyebrow" style="margin-bottom:6px">Spike fidelity vs pulse rate · ${op.name}, ${pw} ms pulses, noise-free</div>`+s;
+    } else el.innerHTML=`<div class="eyebrow" style="margin-bottom:6px">Pumps vs channels</div><p class="lab-info" style="margin:0">A pump moves at most one ion per photon it absorbs. A channel, once opened, lets many ions through. That is why the natural anion channels found in 2015 needed far less light to silence a neuron than halorhodopsin.</p>`;
+  }
+  const nearest=(a,v)=>a.reduce((p,c)=>Math.abs(c-v)<Math.abs(p-v)?c:p);
+  update(); if(!reduce) requestAnimationFrame(loop);
+})();
+
+/* ---------------- MATRIX ---------------- */
+(function matrix(){
+  const cols=['Targets defined cell types','One genetically encoded part','No added chemical','Millisecond timing','Tolerated by cells'];
+  const rows=[
+    ['Laser on native neurons','Fork 1971','n','n','y','u','n'],
+    ['Membrane dye + laser','Farber & Grinvald 1983','n','n','n','u','n'],
+    ['chARGe (fly phototransduction)','Zemelman & Miesenböck 2002','y','n','n','n','u'],
+    ['Photoswitchable tethered ligand','Banghart, Isacoff, Trauner, Kramer 2004','y','n','n','y','u'],
+    ['P2X2 + caged ATP','Lima & Miesenböck 2005','y','p','n','n','u'],
+    ['Channelrhodopsin-2','Boyden, Zhang, Bamberg, Nagel, Deisseroth 2005','y','y','y','y','y',1],
+    ['DREADDs (chemogenetics)','Armbruster & Roth 2007','y','y','n','n','u'],
+  ];
+  const sym={y:'<span class="mk y"></span>',n:'<span class="mk n"></span>',p:'<span class="mk p"></span>',u:'<span class="mk u"></span>'}, lbl={y:'meets',n:'does not meet',p:'partly meets',u:'not addressed'};
+  let h=`<thead><tr><th>Approach</th>${cols.map(c=>`<th style="text-align:center">${c}</th>`).join('')}</tr></thead><tbody>`;
+  rows.forEach(r=>{h+=`<tr class="${r[7]?'hl':''}"><td><b>${r[0]}</b><small>${r[1]}</small></td>${r.slice(2,7).map((v,i)=>`<td class="m ${v}" aria-label="${lbl[v]}: ${cols[i]}">${sym[v]}</td>`).join('')}</tr>`});
+  $('#matrix').innerHTML=h+'</tbody>';
+})();
+
+/* ---------------- BRAIN ---------------- */
+(function brain(){
+  const R={M1:[190,82,'motor ctx'],DG:[300,112,'DG'],vHPC:[340,180,'vHPC'],BLA:[290,212,'BLA'],CeA:[250,224,'CeA'],NAc:[148,196,'NAc'],BNST:[196,178,'BNST'],LH:[228,248,'LH'],VMH:[262,276,'VMHvl'],MPOA:[175,256,'MPOA'],VTA:[332,252,'VTA'],LHb:[300,148,'LHb'],LDT:[408,232,'LDT'],MLR:[380,206,'MLR']};
+  const F=[
+    {t:'Waking from sleep',y:'2007',ref:'Adamantidis et al.',r:['LH'],p:[],d:'Light on hypocretin/orexin neurons in the lateral hypothalamus raises the chance of waking, with latency set by stimulation frequency.'},
+    {t:'Whisker movement',y:'2007',ref:'Aravanis et al.',r:['M1'],p:[],d:'Fibre-delivered light on ChR2 in layer-5 motor cortex moves the whiskers. This was the first optical neural interface in a living rodent.'},
+    {t:'Recalling a memory',y:'2012–13',ref:'Liu et al.; Ramirez et al.',r:['DG'],p:[],d:'Reactivating dentate gyrus engram cells brings back a fear memory. Pairing them with a shock in another place creates a false one.'},
+    {t:'Reward vs aversion',y:'2012',ref:'Lammel et al.',r:['VTA','LDT','LHb'],p:[['LDT','VTA','--ok'],['LHb','VTA','--bad']],d:'In the VTA, inputs from the laterodorsal tegmentum drive reward. Inputs from the lateral habenula drive aversion.'},
+    {t:'Less anxiety',y:'2011',ref:'Tye et al.',r:['BLA','CeA'],p:[['BLA','CeA','--ok']],d:'Activating basolateral-to-central amygdala projections has a strong anxiety-reducing effect.'},
+    {t:'More anxiety',y:'2013',ref:'Felix-Ortiz et al.',r:['BLA','vHPC'],p:[['BLA','vHPC','--bad']],d:'Basolateral amygdala inputs to the ventral hippocampus quickly increase anxiety-like behaviour.'},
+    {t:'Reward seeking',y:'2011',ref:'Stuber et al.',r:['BLA','NAc'],p:[['BLA','NAc','--ok']],d:'Excitatory amygdala input to the nucleus accumbens promotes reward seeking.'},
+    {t:'Anxiety assembled from parts',y:'2013',ref:'Kim et al.',r:['BNST','LH','VTA'],p:[['BNST','LH','--bad'],['BNST','VTA','--ok']],d:'BNST output to the lateral hypothalamus controls risk avoidance. Output to the VTA carries positive valence.'},
+    {t:'From social contact to attack',y:'2011–14',ref:'Lin et al.; Lee et al.',r:['VMH'],p:[],d:'Stronger stimulation of Esr1⁺ cells in the ventrolateral VMH moves behaviour from investigation to mounting to attack.'},
+    {t:'Parenting in modules',y:'2018',ref:'Kohl et al.',r:['MPOA','VTA'],p:[['MPOA','VTA','--c-circ']],d:'Galanin neurons in the MPOA split into projection pools for pup grooming, motivation and adult social interaction. The VTA projection is shown.'},
+    {t:'Speed and gait',y:'2018–21',ref:'Caggiano et al.; Ferreira-Pinto et al.',r:['MLR'],p:[],d:'Intermingled cell groups in the mesencephalic locomotor region separately control locomotor speed, body extension and forelimb movements.'},
+  ];
+  const svg=$('#brainSvg');
+  const outline='M60 172 C48 140 80 118 112 128 C132 82 205 46 292 46 C372 46 422 70 442 110 C474 98 522 116 526 160 C530 200 506 224 482 228 C502 248 540 268 562 290 L548 306 C512 286 472 272 440 270 C400 286 330 296 270 292 C200 290 150 262 120 222 C98 216 70 206 60 172 Z';
+  function render(k){
+    const f=F[k]; let s=`<path d="${outline}" style="fill:var(--surface-2);stroke:var(--line);stroke-width:1.5"/>`+
+    `<path d="M112 130 C180 100 330 92 440 116" style="fill:none;stroke:var(--line);stroke-dasharray:3 4"/><path d="M442 112 C452 160 462 200 482 228" style="fill:none;stroke:var(--line);stroke-dasharray:3 4"/>`+
+    `<text x="270" y="74" text-anchor="middle" style="fill:var(--faint);font:italic 13px var(--f-display)">cortex</text><text x="482" y="170" text-anchor="middle" style="fill:var(--faint);font:italic 13px var(--f-display)">cerebellum</text><text x="82" y="176" text-anchor="middle" style="fill:var(--faint);font:italic 11px var(--f-display)">olf. bulb</text>`;
+    // fibre
+    const t=R[f.r[0]]; s+=`<line x1="${t[0]}" y1="8" x2="${t[0]}" y2="${t[1]-10}" style="stroke:var(--l470);stroke-width:3;opacity:.75"/><circle cx="${t[0]}" cy="${t[1]}" r="22" style="fill:var(--l470-glow)"/><text x="${t[0]+8}" y="18" style="fill:var(--l470);font:10px var(--f-mono)">optical fibre</text>`;
+    f.p.forEach(([a,b,c])=>{const A=R[a],B=R[b]; const mx=(A[0]+B[0])/2, my=Math.min(A[1],B[1])-28; s+=`<path class="proj" d="M${A[0]} ${A[1]} Q${mx} ${my} ${B[0]} ${B[1]}" style="stroke:var(${c})" marker-end="url(#ar)"/>`});
+    Object.entries(R).forEach(([id,[x,y,n]])=>{const a=f.r.includes(id); s+=`<g class="region"><circle cx="${x}" cy="${y}" r="${a?7:4.5}" style="fill:var(${a?'--c-circ':'--faint'});opacity:${a?1:.6}"/><text x="${x+9}" y="${y+4}" style="fill:var(${a?'--fg':'--muted'});opacity:${a?1:.7}">${n}</text></g>`});
+    svg.innerHTML=`<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" style="fill:var(--muted)"/></marker></defs>`+s;
+    document.querySelectorAll('.finding').forEach((b,i)=>b.setAttribute('aria-pressed',i===k));
+  }
+  const list=$('#findings');
+  F.forEach((f,i)=>{const b=document.createElement('button');b.className='finding';b.innerHTML=`<span class="y">${f.y} · ${f.ref}</span><b>${f.t}</b><p>${f.d}</p>`;b.onclick=()=>render(i);list.appendChild(b)});
+  render(3);
+})();
+
+/* ---------------- CLINIC ---------------- */
+(function clinic(){
+  const S=[
+    ['2006','Blind mice','ChR2 in retinal ganglion cells of mice with photoreceptor loss restores light responses and signals to visual cortex.','Bi et al., Neuron · Pan lab'],
+    ['2010','Marmoset retina','AAV-delivered ChR2 is expressed in surviving retinal cells of a primate.','Ivanova et al. · Pan lab'],
+    ['2016','First human trial','RetroSense, licensing Pan’s patent, puts algal opsin genes into the eyes of blind patients in Texas.','STAT / Sci Am 2016'],
+    ['2021','Macaque, red light','Red-shifted Chrimson gives strong responses in primate ganglion cells.','Gauvain et al., Commun Biol'],
+    ['2021','A patient sees objects','With Chrimson and light-projecting goggles, a man with retinitis pigmentosa locates high-contrast objects. The visual cortex shows object-related activity.','Sahel et al., Nat Med · Roska lab'],
+    ['2026','Trials underway','Several clinical trials of optogenetic vision restoration are in progress.','Nobel background 2026'],
+  ];
+  $('#steps').innerHTML=S.map(([y,h,p,w])=>`<div class="step"><div class="y tnum">${y}</div><h3>${h}</h3><p>${p}</p><div class="who">${w}</div></div>`).join('');
+})();
+
+/* ---------------- CREDIT ---------------- */
+(function credit(){
+  const T=[
+    {k:'Academic rule',h:'First peer-reviewed paper',first:'Boyden, Zhang, Bamberg, Nagel & Deisseroth, Nature Neuroscience, August 2005.',
+     list:['Aug 2005 · Boyden et al. (Stanford)','Late 2005 · Li et al. (Herlitze & Landmesser); Nagel et al. (C. elegans)','Early 2006 · Ishizuka et al. (Yawo)','Apr 2006 · Bi et al. (Pan), after two rejections'],
+     note:'Richard Kramer told STAT that even a preprint would not have changed Pan’s position, because the first peer-reviewed paper is what the community counts. Vale and Hyman have argued that journal delays of weeks to years make that rule unfair.'},
+    {k:'Patent rule',h:'Conception plus reduction to practice',first:'Under the rules of the early 2000s, a demonstration in the lab counts, even before it is posted anywhere.',
+     list:['Feb 2004 · Pan: ChR2 responses in cultured retinal neurons (his account to STAT)','Aug 2004 · Boyden: light-evoked activity in a cultured neuron','May 2005 · Pan’s ARVO abstract is published','Mar 2016 · Stanford patent issues after repeated rejections citing Pan’s abstract'],
+     note:'Both sides got patents. Stanford’s covers channelrhodopsin in neurons. Pan’s covers restoring vision, was licensed by RetroSense and led to the first human trial.'},
+    {k:'Discovery rule',h:'Who found the molecule and showed it was a switch',first:'Hegemann and Nagel identified the channelrhodopsins and proved they were light-gated channels (2002–2003). Deisseroth’s lab first showed ChR2 working in neurons.',
+     list:['1991–1996 · Hegemann: microsecond photocurrents suggest receptor and channel are one','2002 · Nagel, Bamberg, Hegemann: ChR1 is a light-gated channel','2003 · Nagel et al.: ChR2 is a cation channel','2005 · Deisseroth lab: ChR2 fires neurons with millisecond precision'],
+     note:'This is how the Nobel Committee’s background frames the 2026 prize: the discovery of channelrhodopsins as light-gated ion channels and their use as a neuronal switch. Boyden, Bamberg and Pan are named in the Committee’s background but are not laureates.'},
+  ];
+  const tabs=$('#tabs'), rule=$('#rule');
+  function show(i){const t=T[i]; tabs.querySelectorAll('.tab').forEach((b,j)=>b.setAttribute('aria-selected',i===j));
+    rule.innerHTML=`<div><div class="eyebrow" style="margin-bottom:10px">${t.k}</div><h3>${t.h}</h3><p class="first">${t.first}</p><p class="lab-info">${t.note}</p></div><div><div class="eyebrow" style="margin-bottom:12px">In order</div><ol>${t.list.map(x=>`<li>${x}</li>`).join('')}</ol></div>`}
+  T.forEach((t,i)=>{const b=document.createElement('button');b.className='tab';b.setAttribute('role','tab');b.textContent=t.h;b.onclick=()=>show(i);tabs.appendChild(b)});
+  show(0);
+  const P=['Brain Prize 2013','Breakthrough 2015','Lasker 2021','Nobel 2026'];
+  const people=[['Peter Hegemann','algal photocurrents; ChR genes',[1,0,1,1]],['Georg Nagel','proved ChR1/ChR2 are channels',[1,0,0,1]],['Karl Deisseroth','ChR2 in neurons; in vivo tools',[1,1,1,1]],['Ed Boyden','ChR2 in neurons; silencers',[1,1,0,0]],['Ernst Bamberg','ChR biophysics',[1,0,0,0]],['Gero Miesenböck','chARGe; first genetic light control',[1,0,0,0]],['Dieter Oesterhelt','bacteriorhodopsin',[0,0,1,0]],['Zhuo-Hua Pan','ChR2 in retina; vision restoration',[0,0,0,0]]];
+  $('#prize').innerHTML=`<thead><tr><th>Scientist</th>${P.map(p=>`<th style="text-align:center">${p}</th>`).join('')}</tr></thead><tbody>`+
+    people.map(([n,w,a])=>`<tr class="${a[3]?'nobel':''}"><td><b>${n}</b><small>${w}</small></td>${a.map((v,i)=>`<td class="d" aria-label="${v?'awarded':'not awarded'}: ${P[i]}"><span class="dot ${v?'':'no'}"></span></td>`).join('')}</tr>`).join('')+'</tbody>';
+})();
+
+/* nav highlight */
+const links=[...document.querySelectorAll('.nav a[href^="#"]')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('section.ch').forEach(s=>io.observe(s));
+})();
+</script>
